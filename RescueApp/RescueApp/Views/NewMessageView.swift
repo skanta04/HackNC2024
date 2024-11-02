@@ -10,6 +10,7 @@ import SwiftUI
 struct NewMessageView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var context
+    @ObservedObject var bluetoothManager: BluetoothManager
     
     @State private var content = ""
     @State private var latitude = 0.0
@@ -65,16 +66,18 @@ struct NewMessageView: View {
                         category: category
                     )
 
-                    context.insert(newMessage)
+                    context.insert(newMessage) // Save locally
+                    bluetoothManager.sendMessage(newMessage) // Send full message via Bluetooth
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
             }
-            .navigationTitle("New Messagae")
+            .navigationTitle("New Message")
         }
     }
 }
 
-#Preview {
-    NewMessageView()
-}
+
+//#Preview {
+    //NewMessageView()
+//}
