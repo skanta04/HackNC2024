@@ -38,7 +38,7 @@ extension HistoryView {
     
     // Fetch all messages from the cloud and merge into local storage
     func fetchMessagesFromCloud() {
-        guard let url = URL(string: "https://your-public-api-url/messages") else { return }
+        guard let url = URL(string: "http://98.80.6.198:8000/messages") else { return }
 
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let data = data {
