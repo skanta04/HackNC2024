@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var bleManager = BluetoothManager()
+    @State private var isPeripheral = false // Toggle to choose between Central and Peripheral
     @State private var messageToSend: String = ""
     
     var body: some View {
@@ -17,25 +18,41 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .padding()
             
-            Text(bleManager.isBluetoothAvailable ? "Bluetooth is On" : "Bluetooth is Off")
-                .foregroundColor(bleManager.isBluetoothAvailable ? .green : .red)
+            // Role Selection Toggle
+            Toggle("Act as Peripheral (Sender)", isOn: $isPeripheral)
                 .padding()
+                .onChange(of: isPeripheral) { newValue in
+                    if newValue {
+                        bleManager.startAsPeripheral()
+                    } else {
+                        bleManager.startAsCentral()
+                    }
+                }
             
-            TextField("Enter Message", text: $messageToSend)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            if isPeripheral {
+                // Peripheral (Sender) UI
+                Text("Enter Message to Send")
+                    .font(.headline)
+                    .padding(.top)
+                
+                TextField("Enter Message", text: $messageToSend)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Send Message") {
+                    bleManager.sendMessage(messageToSend)
+                    messageToSend = "" // Clear the message field
+                }
                 .padding()
-            
-            Button("Send Message") {
-                bleManager.sendMessage(messageToSend)
-                messageToSend = "" // Clear the message field
+            } else {
+                // Central (Receiver) UI
+                Text("Received Message: \(bleManager.receivedMessage)")
+                    .padding()
+                    .onAppear {
+                        print("Received Message Displayed: \(bleManager.receivedMessage)")
+                    }
             }
-            .padding()
-            .disabled(!bleManager.isBluetoothAvailable)
-            
-            Text("Received Message: \(bleManager.receivedMessage)")
-                .padding()
         }
         .padding()
     }
 }
-
