@@ -67,15 +67,16 @@ struct NewMessageView: View {
                     )
 
                     context.insert(newMessage) // Save locally
-                    bluetoothManager.sendMessage(content) // Send message via Bluetooth
-                    dismiss() // Dismiss view
+                    bluetoothManager.sendMessage(newMessage) // Send full message via Bluetooth
+                    dismiss()
                 }
                 .buttonStyle(.borderedProminent)
             }
-            .navigationTitle("New Messagae")
+            .navigationTitle("New Message")
         }
     }
 }
+
 
 //#Preview {
     //NewMessageView()
