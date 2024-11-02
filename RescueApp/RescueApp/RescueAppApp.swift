@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct RescueAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HistoryView()
         }
+        .modelContainer(for: Message.self)
     }
 }

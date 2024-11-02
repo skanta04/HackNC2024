@@ -13,6 +13,10 @@
 		C4DB85D02CD671B1000E619E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4DB85CF2CD671B1000E619E /* Assets.xcassets */; };
 		C4DB85D32CD671B1000E619E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4DB85D22CD671B1000E619E /* Preview Assets.xcassets */; };
 		C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85D92CD67EE8000E619E /* MessageModel.swift */; };
+		C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85DE2CD68E10000E619E /* HistoryView.swift */; };
+		C4DB85E32CD6943B000E619E /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E22CD6943B000E619E /* NewMessageView.swift */; };
+		C4DB85E52CD6A811000E619E /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */; };
+		C4DB85E72CD6A942000E619E /* CloudFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E62CD6A942000E619E /* CloudFunctions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,10 @@
 		C4DB85CF2CD671B1000E619E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C4DB85D22CD671B1000E619E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C4DB85D92CD67EE8000E619E /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
+		C4DB85DE2CD68E10000E619E /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		C4DB85E22CD6943B000E619E /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
+		C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		C4DB85E62CD6A942000E619E /* CloudFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFunctions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,11 +64,13 @@
 		C4DB85CA2CD671AF000E619E /* RescueApp */ = {
 			isa = PBXGroup;
 			children = (
-				B1DB52F22CD6827B00F2C717 /* Info.plist */,
-				C4DB85D92CD67EE8000E619E /* MessageModel.swift */,
+				C4DB85E12CD68E28000E619E /* Models */,
+				C4DB85E02CD68E17000E619E /* Views */,
 				B1DB52F32CD6832700F2C717 /* BluetoothManager.swift */,
+				C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */,
+				C4DB85E62CD6A942000E619E /* CloudFunctions.swift */,
 				C4DB85CB2CD671AF000E619E /* RescueAppApp.swift */,
-				C4DB85CD2CD671AF000E619E /* ContentView.swift */,
+				B1DB52F22CD6827B00F2C717 /* Info.plist */,
 				C4DB85CF2CD671B1000E619E /* Assets.xcassets */,
 				C4DB85D12CD671B1000E619E /* Preview Content */,
 			);
@@ -73,6 +83,24 @@
 				C4DB85D22CD671B1000E619E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		C4DB85E02CD68E17000E619E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C4DB85DE2CD68E10000E619E /* HistoryView.swift */,
+				C4DB85CD2CD671AF000E619E /* ContentView.swift */,
+				C4DB85E22CD6943B000E619E /* NewMessageView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C4DB85E12CD68E28000E619E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C4DB85D92CD67EE8000E619E /* MessageModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -147,8 +175,12 @@
 			files = (
 				C4DB85CE2CD671AF000E619E /* ContentView.swift in Sources */,
 				C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */,
+				C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */,
+				C4DB85E32CD6943B000E619E /* NewMessageView.swift in Sources */,
 				B1DB52F42CD6834900F2C717 /* BluetoothManager.swift in Sources */,
 				C4DB85CC2CD671AF000E619E /* RescueAppApp.swift in Sources */,
+				C4DB85E52CD6A811000E619E /* NetworkMonitor.swift in Sources */,
+				C4DB85E72CD6A942000E619E /* CloudFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,7 +314,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RescueApp/Preview Content\"";
-				DEVELOPMENT_TEAM = D45M7AYBQL;
+				DEVELOPMENT_TEAM = C7T85JPWY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RescueApp/Info.plist;
@@ -298,7 +330,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = identifieer;
+				PRODUCT_BUNDLE_IDENTIFIER = indetifier1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -314,7 +346,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RescueApp/Preview Content\"";
-				DEVELOPMENT_TEAM = D45M7AYBQL;
+				DEVELOPMENT_TEAM = C7T85JPWY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RescueApp/Info.plist;
@@ -330,7 +362,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = identifieer;
+				PRODUCT_BUNDLE_IDENTIFIER = indetifier1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
