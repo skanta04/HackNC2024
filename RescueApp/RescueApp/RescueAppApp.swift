@@ -17,3 +17,9 @@ struct RescueAppApp: App {
         .modelContainer(for: Message.self)
     }
 }
+
+enum AppState {
+    case loading
+    case mainContent
+}
+
