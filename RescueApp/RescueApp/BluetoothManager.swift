@@ -85,8 +85,9 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if characteristic.uuid == characteristicUUID, let value = characteristic.value {
-            if let message = try? JSONDecoder().decode(Message.self, from: value) {
+            if var message = try? JSONDecoder().decode(Message.self, from: value) {
                 DispatchQueue.main.async {
+                    message.status = .pendingSync // Set default status for Bluetooth messages
                     self.receivedMessage = message.content
                     
                     // Save received message to local SwiftData if context is available
