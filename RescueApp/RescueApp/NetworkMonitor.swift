@@ -3,7 +3,7 @@
 //  RescueApp
 //
 //  Created by Saishreeya Kantamsetty on 11/2/24.
-//
+
 
 import Foundation
 import Network
@@ -23,3 +23,5 @@ class NetworkMonitor: ObservableObject {
         monitor.start(queue: queue)
     }
 }
+
+

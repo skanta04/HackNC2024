@@ -67,3 +67,7 @@ private let dateFormatter: DateFormatter = {
 #Preview {
     HistoryView()
 }
+
+#Preview {
+    HistoryView()
+}
