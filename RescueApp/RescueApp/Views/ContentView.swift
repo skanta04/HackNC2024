@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var bleManager = BluetoothManager()
+    @StateObject var bleManager = BluetoothManager()
     @StateObject private var locationManager = LocationManager()
     @State private var isPeripheral = false // Toggle to choose between Central and Peripheral
     @State private var messageToSend: String = ""
@@ -42,11 +42,14 @@ struct ContentView: View {
         }
         .onAppear {
             locationManager.requestLocationAccess()
-            .padding()
-            
-            Text("Received Message: \(bleManager.receivedMessage)")
-                .padding()
         }
         .padding()
+            
+        Text("Received Message: \(bleManager.receivedMessage)")
+            .padding()
     }
+}
+
+#Preview {
+    ContentView()
 }

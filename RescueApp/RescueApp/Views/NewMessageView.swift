@@ -11,6 +11,7 @@ struct NewMessageView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) private var context
     @ObservedObject var bluetoothManager: BluetoothManager
+    @ObservedObject var locationManager: LocationManager
     
     @State private var content = ""
     @State private var latitude = 0.0
@@ -71,6 +72,10 @@ struct NewMessageView: View {
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
+            }
+            .onAppear {
+                self.latitude = locationManager.userLocation!.coordinate.latitude
+                self.longitude = locationManager.userLocation!.coordinate.longitude
             }
             .navigationTitle("New Message")
         }
