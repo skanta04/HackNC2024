@@ -11,6 +11,7 @@
 		C4DB85CE2CD671AF000E619E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85CD2CD671AF000E619E /* ContentView.swift */; };
 		C4DB85D02CD671B1000E619E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4DB85CF2CD671B1000E619E /* Assets.xcassets */; };
 		C4DB85D32CD671B1000E619E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C4DB85D22CD671B1000E619E /* Preview Assets.xcassets */; };
+		C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85D92CD67EE8000E619E /* MessageModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		C4DB85CD2CD671AF000E619E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C4DB85CF2CD671B1000E619E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C4DB85D22CD671B1000E619E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C4DB85D92CD67EE8000E619E /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 		C4DB85CA2CD671AF000E619E /* RescueApp */ = {
 			isa = PBXGroup;
 			children = (
+				C4DB85D92CD67EE8000E619E /* MessageModel.swift */,
 				C4DB85CB2CD671AF000E619E /* RescueAppApp.swift */,
 				C4DB85CD2CD671AF000E619E /* ContentView.swift */,
 				C4DB85CF2CD671B1000E619E /* Assets.xcassets */,
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4DB85CE2CD671AF000E619E /* ContentView.swift in Sources */,
+				C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */,
 				C4DB85CC2CD671AF000E619E /* RescueAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
