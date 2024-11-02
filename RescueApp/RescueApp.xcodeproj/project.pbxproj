@@ -64,7 +64,6 @@
 		C4DB85CA2CD671AF000E619E /* RescueApp */ = {
 			isa = PBXGroup;
 			children = (
-				C4DB85EB2CD6B359000E619E /* View Models */,
 				C4DB85E12CD68E28000E619E /* Models */,
 				C4DB85E02CD68E17000E619E /* Views */,
 				B1DB52F32CD6832700F2C717 /* BluetoothManager.swift */,
@@ -102,13 +101,6 @@
 				C4DB85D92CD67EE8000E619E /* MessageModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		C4DB85EB2CD6B359000E619E /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "View Models";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
