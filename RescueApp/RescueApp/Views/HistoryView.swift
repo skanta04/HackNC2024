@@ -5,14 +5,16 @@
 //  Created by Saishreeya Kantamsetty on 11/2/24.
 //
 
-import SwiftUI
+import Foundation
 import SwiftData
+import SwiftUI
 
 struct HistoryView: View {
     @StateObject private var networkMonitor = NetworkMonitor()
+    @StateObject private var bluetoothManager = BluetoothManager()
+    @Environment(\.modelContext) var context
     
     @State private var createNewBook = false
-    @Environment(\.modelContext) var context
     @Query(sort: \Message.timestamp, order: .reverse) var messages: [Message]
 
     var body: some View {
@@ -38,10 +40,13 @@ struct HistoryView: View {
                 }
             }
             .sheet(isPresented: $createNewBook) {
-                NewMessageView()
+                NewMessageView(bluetoothManager: bluetoothManager) // Pass BluetoothManager to NewMessageView
                     .presentationDetents([.medium])
             }
             .onAppear {
+                // Assign the context to BluetoothManager to allow saving received messages locally
+                bluetoothManager.context = context
+
                 if networkMonitor.isConnected {
                     syncMessagesToCloud()
                     fetchMessagesFromCloud()

@@ -22,7 +22,16 @@ struct ContentView: View {
                 .padding()
             
             Button("Send Message") {
-                bleManager.sendMessage(messageToSend)
+                let newMessage = Message(
+                    id: UUID(),
+                    content: messageToSend,
+                    latitude: 0.0, // or use actual location if available
+                    longitude: 0.0, // or use actual location if available
+                    timestamp: Date(),
+                    status: .pendingSync,
+                    category: .other // Set category as appropriate
+                )
+                bleManager.sendMessage(newMessage)
                 messageToSend = "" // Clear the message field
             }
             .padding()

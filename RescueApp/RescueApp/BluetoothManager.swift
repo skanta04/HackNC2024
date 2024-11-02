@@ -7,9 +7,9 @@
 
 import CoreBluetooth
 import SwiftUI
+import SwiftData
 
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
-    
     @Published var isBluetoothAvailable = false
     @Published var receivedMessage: String = ""
     
@@ -21,21 +21,19 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     private let serviceUUID = CBUUID(string: "0000FFF0-0000-1000-8000-00805F9B34FB")
     private let characteristicUUID = CBUUID(string: "0000FFF1-0000-1000-8000-00805F9B34FB")
     
+    var context: ModelContext? // Add context here
+
     override init() {
         super.init()
-        
-        // Initialize both central and peripheral roles
         startAsCentral()
         startAsPeripheral()
     }
     
     func startAsCentral() {
-        print("Initializing as Central")
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
     func startAsPeripheral() {
-        print("Initializing as Peripheral")
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
     }
     
@@ -45,14 +43,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         isBluetoothAvailable = central.state == .poweredOn
         if isBluetoothAvailable {
             centralManager?.scanForPeripherals(withServices: [serviceUUID], options: nil)
-            print("Central started scanning for peripherals...")
-        } else {
-            print("Bluetooth is not available.")
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        print("Discovered peripheral: \(peripheral.name ?? "Unnamed")")
         if !discoveredPeripherals.contains(peripheral) {
             discoveredPeripherals.append(peripheral)
             centralManager?.connect(peripheral, options: nil)
@@ -60,7 +54,6 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected to peripheral: \(peripheral.name ?? "Unnamed")")
         peripheral.delegate = self
         peripheral.discoverServices([serviceUUID])
     }
@@ -77,7 +70,6 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
                 if characteristic.uuid == characteristicUUID {
-                    print("Characteristic found; subscribing to notifications.")
                     peripheral.setNotifyValue(true, for: characteristic)
                 }
             }
@@ -85,11 +77,18 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        if characteristic.uuid == characteristicUUID, let value = characteristic.value, let message = String(data: value, encoding: .utf8) {
-            DispatchQueue.main.async {
-                self.receivedMessage = message
+        if characteristic.uuid == characteristicUUID, let value = characteristic.value {
+            if let message = try? JSONDecoder().decode(Message.self, from: value) {
+                DispatchQueue.main.async {
+                    self.receivedMessage = message.content
+                    
+                    // Save received message to local SwiftData if context is available
+                    if let context = self.context {
+                        context.insert(message)
+                        try? context.save()
+                    }
+                }
             }
-            print("Received message from peripheral: \(message)")
         }
     }
     
@@ -110,20 +109,14 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             
             self.characteristic = characteristic
             peripheralManager?.startAdvertising([CBAdvertisementDataServiceUUIDsKey: [serviceUUID]])
-            print("Peripheral started advertising...")
-        } else {
-            print("Peripheral Bluetooth is not available.")
         }
     }
     
-    func sendMessage(_ message: String) {
-        guard let characteristic = characteristic, let data = message.data(using: .utf8) else {
-            print("No characteristic available to send message.")
-            return
-        }
+    func sendMessage(_ message: Message) {
+        guard let characteristic = characteristic else { return }
         
-        print("Sending message: \(message)")
-        peripheralManager?.updateValue(data, for: characteristic, onSubscribedCentrals: nil)
+        if let data = try? JSONEncoder().encode(message) {
+            peripheralManager?.updateValue(data, for: characteristic, onSubscribedCentrals: nil)
+        }
     }
 }
-
