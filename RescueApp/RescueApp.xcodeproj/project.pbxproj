@@ -15,6 +15,8 @@
 		C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85D92CD67EE8000E619E /* MessageModel.swift */; };
 		C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85DE2CD68E10000E619E /* HistoryView.swift */; };
 		C4DB85E32CD6943B000E619E /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E22CD6943B000E619E /* NewMessageView.swift */; };
+		F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B42CD6A8070031957B /* LocationManager.swift */; };
+		F8A5C1BA2CD6ADA80031957B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B92CD6ADA80031957B /* MapView.swift */; };
 		C4DB85E52CD6A811000E619E /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */; };
 		C4DB85E72CD6A942000E619E /* CloudFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E62CD6A942000E619E /* CloudFunctions.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +32,8 @@
 		C4DB85D92CD67EE8000E619E /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		C4DB85DE2CD68E10000E619E /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C4DB85E22CD6943B000E619E /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
+		F8A5C1B42CD6A8070031957B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		F8A5C1B92CD6ADA80031957B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		C4DB85E62CD6A942000E619E /* CloudFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFunctions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,6 +71,7 @@
 				C4DB85E12CD68E28000E619E /* Models */,
 				C4DB85E02CD68E17000E619E /* Views */,
 				B1DB52F32CD6832700F2C717 /* BluetoothManager.swift */,
+				F8A5C1B42CD6A8070031957B /* LocationManager.swift */,
 				C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */,
 				C4DB85E62CD6A942000E619E /* CloudFunctions.swift */,
 				C4DB85CB2CD671AF000E619E /* RescueAppApp.swift */,
@@ -91,6 +96,7 @@
 				C4DB85DE2CD68E10000E619E /* HistoryView.swift */,
 				C4DB85CD2CD671AF000E619E /* ContentView.swift */,
 				C4DB85E22CD6943B000E619E /* NewMessageView.swift */,
+				F8A5C1B92CD6ADA80031957B /* MapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -176,8 +182,10 @@
 				C4DB85CE2CD671AF000E619E /* ContentView.swift in Sources */,
 				C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */,
 				C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */,
+				F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */,
 				C4DB85E32CD6943B000E619E /* NewMessageView.swift in Sources */,
 				B1DB52F42CD6834900F2C717 /* BluetoothManager.swift in Sources */,
+				F8A5C1BA2CD6ADA80031957B /* MapView.swift in Sources */,
 				C4DB85CC2CD671AF000E619E /* RescueAppApp.swift in Sources */,
 				C4DB85E52CD6A811000E619E /* NetworkMonitor.swift in Sources */,
 				C4DB85E72CD6A942000E619E /* CloudFunctions.swift in Sources */,
@@ -314,12 +322,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RescueApp/Preview Content\"";
-				DEVELOPMENT_TEAM = D45M7AYBQL;
+				DEVELOPMENT_TEAM = F96K8QGHZR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RescueApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app requires Bluetooth to broadcast and receive messages.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "This app uses Bluetooth to broadcast emergency messages";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show local alerts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -330,7 +339,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = newIdentifier126;
+				PRODUCT_BUNDLE_IDENTIFIER = randombundleidentifer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -346,12 +355,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RescueApp/Preview Content\"";
-				DEVELOPMENT_TEAM = D45M7AYBQL;
+				DEVELOPMENT_TEAM = F96K8QGHZR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RescueApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app requires Bluetooth to broadcast and receive messages.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "This app uses Bluetooth to broadcast emergency messages";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show local alerts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -362,7 +372,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = newIdentifier126;
+				PRODUCT_BUNDLE_IDENTIFIER = newIdentifier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
