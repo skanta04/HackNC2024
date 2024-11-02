@@ -16,7 +16,6 @@
 		C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85DE2CD68E10000E619E /* HistoryView.swift */; };
 		C4DB85E32CD6943B000E619E /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E22CD6943B000E619E /* NewMessageView.swift */; };
 		F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B42CD6A8070031957B /* LocationManager.swift */; };
-		F8A5C1B82CD6A9100031957B /* RequestLocationAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B72CD6A9100031957B /* RequestLocationAccessView.swift */; };
 		F8A5C1BA2CD6ADA80031957B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B92CD6ADA80031957B /* MapView.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,7 +31,6 @@
 		C4DB85DE2CD68E10000E619E /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		C4DB85E22CD6943B000E619E /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
 		F8A5C1B42CD6A8070031957B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		F8A5C1B72CD6A9100031957B /* RequestLocationAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestLocationAccessView.swift; sourceTree = "<group>"; };
 		F8A5C1B92CD6ADA80031957B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,7 +64,6 @@
 		C4DB85CA2CD671AF000E619E /* RescueApp */ = {
 			isa = PBXGroup;
 			children = (
-				F8A5C1B62CD6A8790031957B /* Request Location Access */,
 				C4DB85E12CD68E28000E619E /* Models */,
 				C4DB85E02CD68E17000E619E /* Views */,
 				B1DB52F32CD6832700F2C717 /* BluetoothManager.swift */,
@@ -104,14 +101,6 @@
 				C4DB85D92CD67EE8000E619E /* MessageModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		F8A5C1B62CD6A8790031957B /* Request Location Access */ = {
-			isa = PBXGroup;
-			children = (
-				F8A5C1B72CD6A9100031957B /* RequestLocationAccessView.swift */,
-			);
-			path = "Request Location Access";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,7 +174,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4DB85CE2CD671AF000E619E /* ContentView.swift in Sources */,
-				F8A5C1B82CD6A9100031957B /* RequestLocationAccessView.swift in Sources */,
 				C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */,
 				C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */,
 				F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */,
@@ -332,6 +320,7 @@
 				INFOPLIST_FILE = RescueApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app requires Bluetooth to broadcast and receive messages.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "This app uses Bluetooth to broadcast emergency messages";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show local alerts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -342,7 +331,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = identifieer;
+				PRODUCT_BUNDLE_IDENTIFIER = randombundleidentifer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -364,6 +353,7 @@
 				INFOPLIST_FILE = RescueApp/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This app requires Bluetooth to broadcast and receive messages.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "This app uses Bluetooth to broadcast emergency messages";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs your location to show local alerts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -374,7 +364,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = identifieer;
+				PRODUCT_BUNDLE_IDENTIFIER = randombundleidentifer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

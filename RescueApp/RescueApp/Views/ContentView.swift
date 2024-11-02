@@ -12,6 +12,9 @@ struct ContentView: View {
     @StateObject private var locationManager = LocationManager()
     
     var body: some View {
+        if locationManager.hasLocationAccess {
+            MapView(locationManager: locationManager)
+        }
         VStack(spacing: 20) {
             Text("Bluetooth Testing")
                 .font(.title)
@@ -54,6 +57,10 @@ struct ContentView: View {
                     .foregroundColor(.gray)
                     .padding()
             }
+            
+        }
+        .onAppear {
+            locationManager.requestLocationAccess()
         }
         .padding()
     }

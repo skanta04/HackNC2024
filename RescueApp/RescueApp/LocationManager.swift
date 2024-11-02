@@ -1,54 +1,50 @@
-//
-//  LocationManager.swift
-//  RescueApp
-//
-//  Created by Alexandra Marum on 11/2/24.
-//
-
 import CoreLocation
+import MapKit
+import SwiftUI
 
-class LocationManager: NSObject, ObservableObject {
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
     @Published var userLocation: CLLocation?
     @Published var hasLocationAccess: Bool = false
+
     
     override init() {
-           super.init()
-           manager.delegate = self
-           manager.desiredAccuracy = kCLLocationAccuracyBest
-       }
+        super.init()
+        manager.delegate = self
+    }
     
     func requestLocationAccess() {
-        manager.requestWhenInUseAuthorization()
-    }
-}
-
-extension LocationManager: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .notDetermined:
-            hasLocationAccess = false
-        case .restricted:
-            hasLocationAccess = false
-        case .denied:
-            hasLocationAccess = false
-        case .authorizedAlways:
-            hasLocationAccess = true
-        case .authorizedWhenInUse:
-            hasLocationAccess = true
-        case .authorized:
-            hasLocationAccess = true
-        @unknown default:
-            hasLocationAccess = false
+        if manager.authorizationStatus == .notDetermined {
+            manager.requestWhenInUseAuthorization()
+        } else {
+            checkLocationAuthorization()
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        self.userLocation = location
+    func checkLocationAuthorization() {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            hasLocationAccess = false
+        case .restricted, .denied:
+            hasLocationAccess = false
+        case .authorizedAlways, .authorizedWhenInUse:
+            hasLocationAccess = true
+            manager.startUpdatingLocation()
+        default:
+            break
+        }
     }
     
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        checkLocationAuthorization()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+          guard let location = locations.last else { return }
+          userLocation = location
+      }
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error.localizedDescription)
+        print("Failed to get user location: \(error.localizedDescription)")
     }
 }
