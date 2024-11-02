@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct HistoryView: View {
+    @StateObject private var networkMonitor = NetworkMonitor()
+    
     @State private var createNewBook = false
     @Environment(\.modelContext) var context
     @Query(sort: \Message.timestamp, order: .reverse) var messages: [Message]
@@ -38,6 +40,12 @@ struct HistoryView: View {
             .sheet(isPresented: $createNewBook) {
                 NewMessageView()
                     .presentationDetents([.medium])
+            }
+            .onAppear {
+                if networkMonitor.isConnected {
+                    syncMessagesToCloud()
+                    fetchMessagesFromCloud()
+                }
             }
         }
     }
