@@ -8,57 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var bluetoothManager = BluetoothManager()
+    @ObservedObject var bleManager = BluetoothManager()
+    @State private var messageToSend: String = ""
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Bluetooth Testing")
-                .font(.title)
+        VStack {
+            Text("BLE Communication")
+                .font(.largeTitle)
                 .padding()
             
-            Button(action: {
-                if bluetoothManager.isBroadcasting {
-                    bluetoothManager.stopBroadcastingMessage()
-                } else {
-                    bluetoothManager.startBroadcastingMessage("Test Message")
-                }
-            }) {
-                Text(bluetoothManager.isBroadcasting ? "Stop Broadcasting" : "Start Broadcasting")
-                    .font(.headline)
-                    .padding()
-                    .background(bluetoothManager.isBroadcasting ? Color.red : Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
+            Text(bleManager.isBluetoothAvailable ? "Bluetooth is On" : "Bluetooth is Off")
+                .foregroundColor(bleManager.isBluetoothAvailable ? .green : .red)
+                .padding()
             
-            Button(action: {
-                bluetoothManager.startScanning()
-            }) {
-                Text("Start Scanning")
-                    .font(.headline)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
+            TextField("Enter Message", text: $messageToSend)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
             
-            // Display the discovered message, ensuring it's unwrapped correctly
-            if let message = bluetoothManager.discoveredMessage {
-                Text("hello")
-                    .font(.headline)
-                    .foregroundColor(.green)
-                    .padding()
-            } else {
-                Text("No message detected.")
-                    .foregroundColor(.gray)
-                    .padding()
+            Button("Send Message") {
+                bleManager.sendMessage(messageToSend)
+                messageToSend = "" // Clear the message field
             }
+            .padding()
+            .disabled(!bleManager.isBluetoothAvailable)
+            
+            Text("Received Message: \(bleManager.receivedMessage)")
+                .padding()
         }
         .padding()
     }
 }
 
-
-#Preview {
-    ContentView()
-}
