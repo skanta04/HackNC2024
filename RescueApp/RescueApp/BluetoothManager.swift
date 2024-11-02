@@ -30,21 +30,28 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     func startAsCentral() {
+        print("Initializing as Central")
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
     func startAsPeripheral() {
+        print("Initializing as Peripheral")
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
     }
     
     // MARK: - Central (Receiver) Methods
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-            isBluetoothAvailable = central.state == .poweredOn
-            if isBluetoothAvailable {
-                centralManager?.scanForPeripherals(withServices: [serviceUUID], options: nil)
-            }
+        if central.state == .poweredOn {
+            isBluetoothAvailable = true
+            centralManager?.scanForPeripherals(withServices: [serviceUUID], options: nil)
+            print("Central started scanning for peripherals...")
+        } else if central.state == .poweredOff {
+            isBluetoothAvailable = false
+            print("Central Bluetooth is powered off.")
+            centralManager?.stopScan() // Stop scanning when Bluetooth is turned off
         }
+    }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if !discoveredPeripherals.contains(peripheral) {
@@ -109,6 +116,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             
             self.characteristic = characteristic
             peripheralManager?.startAdvertising([CBAdvertisementDataServiceUUIDsKey: [serviceUUID]])
+            print("Peripheral started advertising...")
+        } else if peripheral.state == .poweredOff {
+            print("Peripheral Bluetooth is powered off.")
+            peripheralManager?.stopAdvertising() // Stop advertising when Bluetooth is turned off
         }
     }
     
