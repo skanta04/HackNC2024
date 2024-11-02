@@ -10,6 +10,7 @@ import SwiftData
 
 struct HistoryView: View {
     @StateObject private var networkMonitor = NetworkMonitor()
+    @StateObject private var bluetoothManager = BluetoothManager()
     
     @State private var createNewBook = false
     @Environment(\.modelContext) var context
@@ -38,7 +39,7 @@ struct HistoryView: View {
                 }
             }
             .sheet(isPresented: $createNewBook) {
-                NewMessageView()
+                NewMessageView(bluetoothManager: bluetoothManager)
                     .presentationDetents([.medium])
             }
             .onAppear {

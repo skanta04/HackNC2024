@@ -12,6 +12,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     @Published var isBluetoothAvailable = false
     @Published var receivedMessage: String = ""
+    @Environment(\.modelContext) private var context // Access SwiftData context
     
     private var centralManager: CBCentralManager?
     private var peripheralManager: CBPeripheralManager?
@@ -88,6 +89,18 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         if characteristic.uuid == characteristicUUID, let value = characteristic.value, let message = String(data: value, encoding: .utf8) {
             DispatchQueue.main.async {
                 self.receivedMessage = message
+                // Save received message to local SwiftData
+                let newMessage = Message(
+                    id: UUID(),
+                    content: message,
+                    latitude: 0.0, // You can set this dynamically if you have location data
+                    longitude: 0.0, // Same for longitude
+                    timestamp: Date(),
+                    status: .synced, // Since it was received from another device
+                    category: .other // Assign default or parsed category
+            )
+            self.context.insert(newMessage)
+            try? self.context.save()
             }
             print("Received message from peripheral: \(message)")
         }
