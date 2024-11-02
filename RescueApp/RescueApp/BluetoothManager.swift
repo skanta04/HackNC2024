@@ -7,22 +7,26 @@
 
 import CoreBluetooth
 import SwiftUI
+import SwiftData
 
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
-    
     @Published var isBluetoothAvailable = false
     @Published var receivedMessage: String = ""
     
     private var centralManager: CBCentralManager?
     private var peripheralManager: CBPeripheralManager?
-    private var discoveredPeripheral: CBPeripheral?
+    private var discoveredPeripherals: [CBPeripheral] = []
     private var characteristic: CBMutableCharacteristic?
     
     private let serviceUUID = CBUUID(string: "0000FFF0-0000-1000-8000-00805F9B34FB")
     private let characteristicUUID = CBUUID(string: "0000FFF1-0000-1000-8000-00805F9B34FB")
     
+    var context: ModelContext? // Add context here
+
     override init() {
         super.init()
+        startAsCentral()
+        startAsPeripheral()
     }
     
     func startAsCentral() {
@@ -38,24 +42,25 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     // MARK: - Central (Receiver) Methods
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        isBluetoothAvailable = central.state == .poweredOn
-        if isBluetoothAvailable {
+        if central.state == .poweredOn {
+            isBluetoothAvailable = true
             centralManager?.scanForPeripherals(withServices: [serviceUUID], options: nil)
             print("Central started scanning for peripherals...")
-        } else {
-            print("Bluetooth is not available.")
+        } else if central.state == .poweredOff {
+            isBluetoothAvailable = false
+            print("Central Bluetooth is powered off.")
+            centralManager?.stopScan() // Stop scanning when Bluetooth is turned off
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        print("Discovered peripheral: \(peripheral.name ?? "Unnamed")")
-        discoveredPeripheral = peripheral
-        centralManager?.stopScan()
-        centralManager?.connect(peripheral, options: nil)
+        if !discoveredPeripherals.contains(peripheral) {
+            discoveredPeripherals.append(peripheral)
+            centralManager?.connect(peripheral, options: nil)
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected to peripheral: \(peripheral.name ?? "Unnamed")")
         peripheral.delegate = self
         peripheral.discoverServices([serviceUUID])
     }
@@ -72,7 +77,6 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
                 if characteristic.uuid == characteristicUUID {
-                    print("Characteristic found; subscribing to notifications.")
                     peripheral.setNotifyValue(true, for: characteristic)
                 }
             }
@@ -80,11 +84,18 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        if characteristic.uuid == characteristicUUID, let value = characteristic.value, let message = String(data: value, encoding: .utf8) {
-            DispatchQueue.main.async {
-                self.receivedMessage = message
+        if characteristic.uuid == characteristicUUID, let value = characteristic.value {
+            if let message = try? JSONDecoder().decode(Message.self, from: value) {
+                DispatchQueue.main.async {
+                    self.receivedMessage = message.content
+                    
+                    // Save received message to local SwiftData if context is available
+                    if let context = self.context {
+                        context.insert(message)
+                        try? context.save()
+                    }
+                }
             }
-            print("Received message from peripheral: \(message)")
         }
     }
     
@@ -106,18 +117,17 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             self.characteristic = characteristic
             peripheralManager?.startAdvertising([CBAdvertisementDataServiceUUIDsKey: [serviceUUID]])
             print("Peripheral started advertising...")
-        } else {
-            print("Peripheral Bluetooth is not available.")
+        } else if peripheral.state == .poweredOff {
+            print("Peripheral Bluetooth is powered off.")
+            peripheralManager?.stopAdvertising() // Stop advertising when Bluetooth is turned off
         }
     }
     
-    func sendMessage(_ message: String) {
-        guard let characteristic = characteristic, let data = message.data(using: .utf8) else {
-            print("No characteristic available to send message.")
-            return
-        }
+    func sendMessage(_ message: Message) {
+        guard let characteristic = characteristic else { return }
         
-        print("Sending message: \(message)")
-        peripheralManager?.updateValue(data, for: characteristic, onSubscribedCentrals: nil)
+        if let data = try? JSONEncoder().encode(message) {
+            peripheralManager?.updateValue(data, for: characteristic, onSubscribedCentrals: nil)
+        }
     }
 }

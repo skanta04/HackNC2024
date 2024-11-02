@@ -18,48 +18,34 @@ struct ContentView: View {
             MapView(locationManager: locationManager)
         }
         VStack {
-            Text("BLE Communication")
+            Text("Bluetooth Messaging")
                 .font(.largeTitle)
                 .padding()
             
-            // Role Selection Toggle
-            Toggle("Act as Peripheral (Sender)", isOn: $isPeripheral)
+            TextField("Enter Message", text: $messageToSend)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-                .onChange(of: isPeripheral) { newValue in
-                    if newValue {
-                        bleManager.startAsPeripheral()
-                    } else {
-                        bleManager.startAsCentral()
-                    }
-                }
             
-            if isPeripheral {
-                // Peripheral (Sender) UI
-                Text("Enter Message to Send")
-                    .font(.headline)
-                    .padding(.top)
-                
-                TextField("Enter Message", text: $messageToSend)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
-                Button("Send Message") {
-                    bleManager.sendMessage(messageToSend)
-                    messageToSend = "" // Clear the message field
-                }
-                .padding()
-            } else {
-                // Central (Receiver) UI
-                Text("Received Message: \(bleManager.receivedMessage)")
-                    .padding()
-                    .onAppear {
-                        print("Received Message Displayed: \(bleManager.receivedMessage)")
-                    }
+            Button("Send Message") {
+                let newMessage = Message(
+                    id: UUID(),
+                    content: messageToSend,
+                    latitude: 0.0, // or use actual location if available
+                    longitude: 0.0, // or use actual location if available
+                    timestamp: Date(),
+                    status: .pendingSync,
+                    category: .other // Set category as appropriate
+                )
+                bleManager.sendMessage(newMessage)
+                messageToSend = "" // Clear the message field
             }
-            
         }
         .onAppear {
             locationManager.requestLocationAccess()
+            .padding()
+            
+            Text("Received Message: \(bleManager.receivedMessage)")
+                .padding()
         }
         .padding()
     }
