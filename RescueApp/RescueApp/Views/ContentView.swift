@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var bluetoothManager = BluetoothManager()
+    @StateObject private var locationManager = LocationManager()
     
     var body: some View {
         VStack(spacing: 20) {

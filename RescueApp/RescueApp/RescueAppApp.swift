@@ -12,7 +12,7 @@ import SwiftData
 struct RescueAppApp: App {
     var body: some Scene {
         WindowGroup {
-            HistoryView()
+            RequestLocationAccessView(locationManager: LocationManager())
         }
         .modelContainer(for: Message.self)
     }

@@ -43,3 +43,36 @@ enum MessageCategory: String, Codable {
     case sos = "SOS"
     case other = "Other"
 }
+
+// examples
+
+extension Message {
+    static let example1 = Message(id: UUID(),
+                                  content: "Toilet paper",
+                                  latitude: 10.0,
+                                  longitude: 10.0,
+                                  timestamp: Date(),
+                                  status: .synced,
+                                  category: .resource)
+    static let example2 = Message(id: UUID(),
+                                  content: "Flash flooding",
+                                  latitude: 20.0,
+                                  longitude: 20.0,
+                                  timestamp: Date(),
+                                  status: .synced,
+                                  category: .flooding)
+    static let example3 = Message(id: UUID(),
+                                  content: "Need help!",
+                                  latitude: 30.0,
+                                  longitude: 30.0,
+                                  timestamp: Date(),
+                                  status: .synced,
+                                  category: .sos)
+    static let example4 = Message(id: UUID(),
+                                  content: "Road blocked!",
+                                  latitude: 40.0,
+                                  longitude: 40.0,
+                                  timestamp: Date(),
+                                  status: .synced,
+                                  category: .roadClosure)
+}
