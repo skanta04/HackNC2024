@@ -8,54 +8,53 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var bluetoothManager = BluetoothManager()
+    @ObservedObject var bleManager = BluetoothManager()
     @StateObject private var locationManager = LocationManager()
+    @State private var isPeripheral = false // Toggle to choose between Central and Peripheral
+    @State private var messageToSend: String = ""
     
     var body: some View {
         if locationManager.hasLocationAccess {
             MapView(locationManager: locationManager)
         }
-        VStack(spacing: 20) {
-            Text("Bluetooth Testing")
-                .font(.title)
+        VStack {
+            Text("BLE Communication")
+                .font(.largeTitle)
                 .padding()
             
-            Button(action: {
-                if bluetoothManager.isBroadcasting {
-                    bluetoothManager.stopBroadcastingMessage()
-                } else {
-                    bluetoothManager.startBroadcastingMessage("Test Message")
+            // Role Selection Toggle
+            Toggle("Act as Peripheral (Sender)", isOn: $isPeripheral)
+                .padding()
+                .onChange(of: isPeripheral) { newValue in
+                    if newValue {
+                        bleManager.startAsPeripheral()
+                    } else {
+                        bleManager.startAsCentral()
+                    }
                 }
-            }) {
-                Text(bluetoothManager.isBroadcasting ? "Stop Broadcasting" : "Start Broadcasting")
-                    .font(.headline)
-                    .padding()
-                    .background(bluetoothManager.isBroadcasting ? Color.red : Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
             
-            Button(action: {
-                bluetoothManager.startScanning()
-            }) {
-                Text("Start Scanning")
+            if isPeripheral {
+                // Peripheral (Sender) UI
+                Text("Enter Message to Send")
                     .font(.headline)
+                    .padding(.top)
+                
+                TextField("Enter Message", text: $messageToSend)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            
-            // Display the discovered message, ensuring it's unwrapped correctly
-            if let message = bluetoothManager.discoveredMessage {
-                Text("hello")
-                    .font(.headline)
-                    .foregroundColor(.green)
-                    .padding()
+                
+                Button("Send Message") {
+                    bleManager.sendMessage(messageToSend)
+                    messageToSend = "" // Clear the message field
+                }
+                .padding()
             } else {
-                Text("No message detected.")
-                    .foregroundColor(.gray)
+                // Central (Receiver) UI
+                Text("Received Message: \(bleManager.receivedMessage)")
                     .padding()
+                    .onAppear {
+                        print("Received Message Displayed: \(bleManager.receivedMessage)")
+                    }
             }
             
         }
@@ -64,9 +63,4 @@ struct ContentView: View {
         }
         .padding()
     }
-}
-
-
-#Preview {
-    ContentView()
 }
