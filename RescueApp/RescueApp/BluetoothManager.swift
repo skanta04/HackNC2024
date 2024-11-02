@@ -11,6 +11,8 @@ import SwiftUI
 
 class BluetoothManager: NSObject, ObservableObject, CBPeripheralManagerDelegate, CBCentralManagerDelegate {
     @Published var isBroadcasting = false
+    @Published var discoveredMessage: String? // Ensure this is @Published so it updates the view
+
     private var peripheralManager: CBPeripheralManager?
     private var centralManager: CBCentralManager?
 
@@ -23,17 +25,14 @@ class BluetoothManager: NSObject, ObservableObject, CBPeripheralManagerDelegate,
     // MARK: - Bluetooth Broadcasting
     func startBroadcastingMessage(_ message: String) {
         guard let peripheralManager = peripheralManager else { return }
-        
         let messageData = [CBAdvertisementDataLocalNameKey: message]
         peripheralManager.startAdvertising(messageData)
         isBroadcasting = true
-        print("Started Broadcasting: \(message)")
     }
     
     func stopBroadcastingMessage() {
         peripheralManager?.stopAdvertising()
         isBroadcasting = false
-        print("Stopped Broadcasting")
     }
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
@@ -47,7 +46,6 @@ class BluetoothManager: NSObject, ObservableObject, CBPeripheralManagerDelegate,
     // MARK: - Bluetooth Scanning
     func startScanning() {
         centralManager?.scanForPeripherals(withServices: nil, options: nil)
-        print("Started Scanning for messages")
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -60,8 +58,9 @@ class BluetoothManager: NSObject, ObservableObject, CBPeripheralManagerDelegate,
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         if let message = advertisementData[CBAdvertisementDataLocalNameKey] as? String {
-            print("Discovered message: \(message)")
+            DispatchQueue.main.async {
+                self.discoveredMessage = message // Update the detected message
+            }
         }
     }
 }
-

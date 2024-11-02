@@ -41,10 +41,23 @@ struct ContentView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
+            
+            // Display the discovered message, ensuring it's unwrapped correctly
+            if let message = bluetoothManager.discoveredMessage {
+                Text("hello")
+                    .font(.headline)
+                    .foregroundColor(.green)
+                    .padding()
+            } else {
+                Text("No message detected.")
+                    .foregroundColor(.gray)
+                    .padding()
+            }
         }
         .padding()
     }
 }
+
 
 #Preview {
     ContentView()
