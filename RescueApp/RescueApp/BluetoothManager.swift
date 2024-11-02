@@ -15,7 +15,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     private var centralManager: CBCentralManager?
     private var peripheralManager: CBPeripheralManager?
-    private var discoveredPeripheral: CBPeripheral?
+    private var discoveredPeripherals: [CBPeripheral] = []
     private var characteristic: CBMutableCharacteristic?
     
     private let serviceUUID = CBUUID(string: "0000FFF0-0000-1000-8000-00805F9B34FB")
@@ -23,6 +23,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     override init() {
         super.init()
+        
+        // Initialize both central and peripheral roles
+        startAsCentral()
+        startAsPeripheral()
     }
     
     func startAsCentral() {
@@ -49,9 +53,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         print("Discovered peripheral: \(peripheral.name ?? "Unnamed")")
-        discoveredPeripheral = peripheral
-        centralManager?.stopScan()
-        centralManager?.connect(peripheral, options: nil)
+        if !discoveredPeripherals.contains(peripheral) {
+            discoveredPeripherals.append(peripheral)
+            centralManager?.connect(peripheral, options: nil)
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -121,3 +126,4 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         peripheralManager?.updateValue(data, for: characteristic, onSubscribedCentrals: nil)
     }
 }
+

@@ -64,7 +64,6 @@
 		C4DB85CA2CD671AF000E619E /* RescueApp */ = {
 			isa = PBXGroup;
 			children = (
-				C4DB85EB2CD6B359000E619E /* View Models */,
 				C4DB85E12CD68E28000E619E /* Models */,
 				C4DB85E02CD68E17000E619E /* Views */,
 				B1DB52F32CD6832700F2C717 /* BluetoothManager.swift */,
@@ -102,13 +101,6 @@
 				C4DB85D92CD67EE8000E619E /* MessageModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		C4DB85EB2CD6B359000E619E /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "View Models";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -322,7 +314,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RescueApp/Preview Content\"";
-				DEVELOPMENT_TEAM = D45M7AYBQL;
+				DEVELOPMENT_TEAM = C7T85JPWY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RescueApp/Info.plist;
@@ -338,7 +330,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = newIdentifier;
+				PRODUCT_BUNDLE_IDENTIFIER = newIdentifier11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -354,7 +346,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RescueApp/Preview Content\"";
-				DEVELOPMENT_TEAM = D45M7AYBQL;
+				DEVELOPMENT_TEAM = C7T85JPWY5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RescueApp/Info.plist;
@@ -370,7 +362,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = newIdentifier;
+				PRODUCT_BUNDLE_IDENTIFIER = newIdentifier11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
