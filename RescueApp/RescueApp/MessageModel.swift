@@ -6,15 +6,28 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Message {
-    var id: UUID
+@Model
+class Message {
+    @Attribute(.unique) var id: UUID
     var content: String
     var latitude: Double
     var longitude: Double
     var timestamp: Date
     var status: MessageStatus
     var category: MessageCategory
+    
+    init(id: UUID, content: String, latitude: Double, longitude: Double, timestamp: Date, status: MessageStatus, category: MessageCategory) {
+        self.id = id
+        self.content = content
+        self.latitude = latitude
+        self.longitude = longitude
+        self.timestamp = timestamp
+        self.status = status
+        self.status = status
+        self.category = category
+    }
 }
 
 enum MessageStatus: String, Codable {
