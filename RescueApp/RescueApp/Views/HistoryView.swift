@@ -52,6 +52,12 @@ struct HistoryView: View {
                     fetchMessagesFromCloud()
                 }
             }
+            .onChange(of: networkMonitor.isConnected) { isConnected in
+                if isConnected {
+                    syncMessagesToCloud() // Sync pending messages to the cloud
+                    fetchMessagesFromCloud() // Fetch recent messages from the cloud
+                }
+            }
         }
     }
 }
@@ -63,10 +69,6 @@ private let dateFormatter: DateFormatter = {
     return formatter
 }()
 
-
-#Preview {
-    HistoryView()
-}
 
 #Preview {
     HistoryView()
