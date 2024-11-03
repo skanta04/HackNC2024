@@ -6,9 +6,12 @@
 ## Project Structure
 
 
-#### RescueApp (Mobile Application)
-Blah Blah Insert general description here 
-
+#### RescueApp (iOS Application)
+The RescueApp folder contains the Xcode project for EchoAlert, which is responsible for the app's core functionality. The project integrates several key components to ensure robust functionality in emergency situations:
+1. **LocationManager**: Handles location tracking, allowing the app to retrieve and display a user’s current location within a map interface.
+2. **BluetoothManager**: Manages connections between devices in close proximity, allowing users to send and receive messages without relying on cellular or Wi-Fi networks.
+3.  **Network Monitor**: When the device is online, the app can publish and receive alerts over Wi-Fi or cellular networks. When offline, the app seamlessly switches to Bluetooth-based messaging, ensuring continuous connectivity as long as other EchoAlert devices are nearby.
+4. **SwiftData and Message Model**: For local data storage, EchoAlert uses SwiftData. A single Message model represents each message or alert, with an enumeration defining the alert category (e.g., resource, flooding, road blockages).
 
 #### PublicSync (Online Backend Lgic: REST API, AWS RDS Database Set up in Terraform)
 
@@ -17,7 +20,7 @@ This folder contains the core components of the wifi enabled, Cloud-based backen
 
 ## IOS App Files and Logic
 
-1. ***Bluetooth Manager***
+### Bluetooth Manager
 
 Using Apple's Framework "CoreBluetooth," we created a function called Bluetooth Manager that creates Bluetooth communication between devices using both central and peripheral modes. This can scan for nearby devices, send messages, and receive messages. Additionally, received messages are saved using SwiftData. 
 
@@ -167,7 +170,8 @@ https://medium.com/@kalidoss.shanmugam/send-and-receive-data-between-two-iphone-
 
 ChatGPT for debugging! 
 
-2. **Cloud Functions** - These functions are used to post and get from the local database to the cloud database dynamically so we can update the map based on being online or offline
+### Cloud Functions
+These functions are used to post and get from the local database to the cloud database dynamically so we can update the map based on being online or offline
 
 - `syncMessagedToCloud` function uploads any unsynced (offline) messages to the cloud once the user is online, marking them as `synced` locally after successful upload. This keeps everyone updated with the latest alerts created offline.
 ```
@@ -231,8 +235,59 @@ private func mergeCloudMessages(_ cloudMessages: [Message]) {
         try? context.save()
     }
 ```
-3. **Location Manager**
-4. **Network Monitor** - Observes connectivity on your phone. The `NWPathMonitor` detects a change in this connectivity. It updates the `IsConnected` property dynamically based on online or offline and publishes this property to the rest of the app, which allows the app to respond to connectivity changes in real time. 
+### LocationManager
+The LocationManager is built using Apple's CoreLocation framework and integrates with SwiftUI to enable real-time updates of location data in the user interface.
+
+**What does it do?**
+When the app initializes, the LocationManager is instantiated and performs several steps:
+
+1. **Requesting Location Permission**: It checks the current location permission status. If permission is not yet determined, it prompts the user to allow location access. This permission is essential for the app to function as it needs to track the user’s location.
+
+       ```
+              func requestLocationAccess() {
+            if manager.authorizationStatus == .notDetermined {
+                manager.requestWhenInUseAuthorization()
+            } else {
+                checkLocationAuthorization()
+            }
+        }
+       ```
+2. **Tracking Authorization Status**: A delegate (CLLocationManagerDelegate) is assigned to LocationManager to continuously monitor changes to the user’s location permission. This delegate listens for any updates to the authorization status, such as when the user grants or revokes permission. The authorization status is stored in a Boolean (hasLocationAccess) to reflect whether the app currently has location access.
+       
+    ```
+    // delegate definition in init
+       override init() {
+        super.init()
+        manager.delegate = self
+    }
+
+    // delegate listening for changes
+      func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        checkLocationAuthorization()
+    }
+    ```
+    
+3. **Updating User Location**: When the user’s location is updated, the delegate captures the new location and updates the userLocation property. This ensures that the app always has access to the user’s latest location, which can then be used to update the interface or perform location-based actions in real time.
+       
+    ```
+      func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+          guard let location = locations.last else { return }
+          userLocation = location
+      }
+    ```
+    
+4. **Error Handling**: If an error occurs (e.g., due to signal issues or restricted permissions), the delegate’s locationManager(_:didFailWithError:) method is triggered. This method logs a message to help with debugging and, if needed, can update the user interface to inform the user that location data is temporarily unavailable.
+       
+    ```
+        func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to get user location: \(error.localizedDescription)")
+    }
+    ```
+
+### Network Monitor
+
+Observes connectivity on your phone. The `NWPathMonitor` detects a change in this connectivity. It updates the `IsConnected` property dynamically based on online or offline and publishes this property to the rest of the app, which allows the app to respond to connectivity changes in real time. 
+
 ```
 class NetworkMonitor: ObservableObject {
     private var monitor = NWPathMonitor()
