@@ -104,3 +104,54 @@ func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CB
 ```
 didUpdateValueFor is called when a message is received from another device. It decodes the message and updates receivedMessage.
 
+Peripheral Mode (Sender)
+In Peripheral Mode, BluetoothManager broadcasts a message so other devices can receive it. 
+```
+func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+    if peripheral.state == .poweredOn {
+        let characteristic = CBMutableCharacteristic(
+            type: characteristicUUID,
+            properties: [.notify, .write],
+            value: nil,
+            permissions: [.readable, .writeable]
+        )
+
+        let service = CBMutableService(type: serviceUUID, primary: true)
+        service.characteristics = [characteristic]
+        peripheralManager?.add(service)
+
+        self.characteristic = characteristic
+        peripheralManager?.startAdvertising([CBAdvertisementDataServiceUUIDsKey: [serviceUUID]])
+        print("Peripheral started advertising...")
+    } else if peripheral.state == .poweredOff {
+        peripheralManager?.stopAdvertising()
+    }
+}
+```
+
+peripheralManagerDidUpdateState() sets up a characteristic with read and write permissions and starts advertising the service. This is how we are able to use both Perpherial and Central Managers on  This allows other devices to connect and receive messages from this device.
+
+**Sending Messages**
+
+```
+func sendMessage(_ message: Message) {
+    guard let characteristic = characteristic else { return }
+
+    if let data = try? JSONEncoder().encode(message) {
+        peripheralManager?.updateValue(data, for: characteristic, onSubscribedCentrals: nil)
+    }
+}
+```
+
+sendMessage encodes a message and updates the characteristic’s value, broadcasting it to subscribed devices. This broadcasts the message to all devices connected to this characteristic.
+
+Credits: 
+https://medium.com/@kalidoss.shanmugam/send-and-receive-data-between-two-iphone-devices-via-ble-in-swift-8ccbf941ce47
+
+ChatGPT for debugging! 
+
+
+
+
+
+
