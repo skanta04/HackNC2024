@@ -18,6 +18,9 @@
 		C4DB85E52CD6A811000E619E /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */; };
 		C4DB85E72CD6A942000E619E /* CloudFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E62CD6A942000E619E /* CloudFunctions.swift */; };
 		C4DB85F12CD71892000E619E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85F02CD71892000E619E /* LoadingView.swift */; };
+		F84AF8BC2CD73AA6000A2EC2 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84AF8BB2CD73AA6000A2EC2 /* PinView.swift */; };
+		F84AF8BE2CD73B4A000A2EC2 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84AF8BD2CD73B4A000A2EC2 /* ToolbarView.swift */; };
+		F84AF8C12CD7490D000A2EC2 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F84AF8C02CD7490D000A2EC2 /* MapViewModel.swift */; };
 		F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B42CD6A8070031957B /* LocationManager.swift */; };
 		F8A5C1BA2CD6ADA80031957B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B92CD6ADA80031957B /* MapView.swift */; };
 /* End PBXBuildFile section */
@@ -36,6 +39,9 @@
 		C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		C4DB85E62CD6A942000E619E /* CloudFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFunctions.swift; sourceTree = "<group>"; };
 		C4DB85F02CD71892000E619E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		F84AF8BB2CD73AA6000A2EC2 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
+		F84AF8BD2CD73B4A000A2EC2 /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
+		F84AF8C02CD7490D000A2EC2 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		F8A5C1B42CD6A8070031957B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		F8A5C1B92CD6ADA80031957B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +76,7 @@
 		C4DB85CA2CD671AF000E619E /* RescueApp */ = {
 			isa = PBXGroup;
 			children = (
+				F84AF8BF2CD74902000A2EC2 /* View Models */,
 				C4DB85E12CD68E28000E619E /* Models */,
 				C4DB85E02CD68E17000E619E /* Views */,
 				B1DB52F32CD6832700F2C717 /* BluetoothManager.swift */,
@@ -99,7 +106,9 @@
 				C4DB85CD2CD671AF000E619E /* ContentView.swift */,
 				C4DB85E22CD6943B000E619E /* NewMessageView.swift */,
 				F8A5C1B92CD6ADA80031957B /* MapView.swift */,
+				F84AF8BB2CD73AA6000A2EC2 /* PinView.swift */,
 				C4DB85F02CD71892000E619E /* LoadingView.swift */,
+				F84AF8BD2CD73B4A000A2EC2 /* ToolbarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -110,6 +119,14 @@
 				C4DB85D92CD67EE8000E619E /* MessageModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		F84AF8BF2CD74902000A2EC2 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				F84AF8C02CD7490D000A2EC2 /* MapViewModel.swift */,
+			);
+			path = "View Models";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -184,6 +201,7 @@
 			files = (
 				C4DB85CE2CD671AF000E619E /* ContentView.swift in Sources */,
 				C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */,
+				F84AF8BC2CD73AA6000A2EC2 /* PinView.swift in Sources */,
 				C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */,
 				C4DB85F12CD71892000E619E /* LoadingView.swift in Sources */,
 				F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */,
@@ -192,7 +210,9 @@
 				F8A5C1BA2CD6ADA80031957B /* MapView.swift in Sources */,
 				C4DB85CC2CD671AF000E619E /* RescueAppApp.swift in Sources */,
 				C4DB85E52CD6A811000E619E /* NetworkMonitor.swift in Sources */,
+				F84AF8C12CD7490D000A2EC2 /* MapViewModel.swift in Sources */,
 				C4DB85E72CD6A942000E619E /* CloudFunctions.swift in Sources */,
+				F84AF8BE2CD73B4A000A2EC2 /* ToolbarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
