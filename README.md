@@ -1,6 +1,6 @@
 # EchoAlert
 
-**EchoAlert** is a disaster response messaging application designed to work over Bluetooth, utilizing Apple's Core Data and Core Bluetooth. It enables users to communicate critical alerts and messages when cellular service is unavailable during natural disasters.
+**EchoAlert** is a disaster response messaging application designed to work over Bluetooth, utilizing Apple's Swift Data and Core Bluetooth. It enables users to communicate critical alerts and messages when cellular service is unavailable during natural disasters.
 
 
 ## Project Structure
@@ -20,11 +20,11 @@ This folder contains the core components of the wifi enabled, Cloud-based backen
 
 ## IOS App Files and Logic
 
-### Bluetooth Manager
+#### Bluetooth Manager
 
 Using Apple's Framework "CoreBluetooth," we created a function called Bluetooth Manager that creates Bluetooth communication between devices using both central and peripheral modes. This can scan for nearby devices, send messages, and receive messages. Additionally, received messages are saved using SwiftData. 
 
-**What does it do?**
+#### What does it do? 
 
 1. Finds Other Devices Nearby: It acts like a radar, sending for other Bluetooth devices around you. After testing, we saw that the minimum range of distance is 30 feet and the maximum is 75 feet for a Bluetooth connection.
 
@@ -32,7 +32,7 @@ Using Apple's Framework "CoreBluetooth," we created a function called Bluetooth 
 
 3. Saves Messages: It can save messages that you receive, so you can check them when you're connected to Wifi and when you're not connected.
 
-**How does it work?**
+#### How does it work?
 
 First, we created an instance of Bluetooth Manager, where it looks for other devices (Central Mode) and broadcastings to itself (Peripheral Mode):
 
@@ -54,7 +54,7 @@ Now, it's searching for nearby signals and is ready to broadcast a message! Our 
     
 }
 ```
-Central Mode (Receiver)
+## Central Mode (Receiver)
 
 In Central Mode, BluetoothManager acts as a receiver, scanning for nearby devices and connecting to them.
 
@@ -124,7 +124,7 @@ func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CB
 ```
 didUpdateValueFor is called when a message is received from another device. It decodes the message and updates receivedMessage.
 
-Peripheral Mode (Sender)
+## Peripheral Mode (Sender)
 In Peripheral Mode, BluetoothManager broadcasts a message so other devices can receive it. 
 ```
 func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
@@ -151,7 +151,7 @@ func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
 
 peripheralManagerDidUpdateState() sets up a characteristic with read and write permissions and starts advertising the service. This is how we are able to use both Perpherial and Central Managers on  This allows other devices to connect and receive messages from this device.
 
-**Sending Messages**
+## Sending Messages 
 
 ```
 func sendMessage(_ message: Message) {
