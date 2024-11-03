@@ -3,6 +3,7 @@ from sqlmodel import SQLModel
 from database import engine, get_db_session
 from sqlalchemy.orm import Session
 from models.message_create import MessageCreate
+from models.message_create import MessageStatus
 from models.message_details import MessageDetails
 from services.message_service import MessageService
 from fastapi import HTTPException, Depends
@@ -50,3 +51,14 @@ def delete_message(message_id: int, db: Session = Depends(get_db_session)):
         print(f"Error occurred while deleting the message with ID {message_id}: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error while deleting the message.")
 
+@app.put("/messages/{message_id}/status", response_model=MessageDetails)
+def update_message_status(message_id: int, status: MessageStatus, db: Session = Depends(get_db_session)):
+    try:
+        updated_message = message_service.update_message_status(message_id, status, db)
+        if not updated_message:
+            raise HTTPException(status_code=404, detail="Message not found")
+        return updated_message
+    except Exception as e:
+        db.rollback()
+        print(f"Error occurred while updating the status of message with ID {message_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error while updating the message status.")
