@@ -27,6 +27,7 @@ struct MapView: View {
     
     // view specific
     @State private var createMessage = false
+    @State private var showSOSAlert = false
 
     var body: some View {
         NavigationStack {
@@ -35,7 +36,7 @@ struct MapView: View {
                     MapMarker(coordinate: CLLocationCoordinate2D(latitude: message.latitude, longitude: message.longitude))
                 })
             
-            toolbarView(createMessage: $createMessage)
+            toolbarView(createMessage: $createMessage, showSOSAlert: $showSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
 
         }
         .onAppear {
@@ -57,19 +58,34 @@ struct MapView: View {
             NewMessageView(bluetoothManager: bluetoothManager, locationManager: locationManager) // Pass BluetoothManager to NewMessageView
                 .presentationDetents([.medium])
         }
+        .alert(isPresented: $showSOSAlert) {
+            Alert(title: Text("SOS Sent"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
+        }
     }
 }
 
 struct toolbarView: View {
     @Binding var createMessage: Bool
+    @Binding var showSOSAlert: Bool
+    @ObservedObject var networkMonitor: NetworkMonitor
+    @ObservedObject var bluetoothManager: BluetoothManager
+    var locationManager: LocationManager
     
     var body: some View {
         HStack(spacing: 75) {
-            Button {} label: {
-                Text("SOS")
-                    .font(.largeTitle)
-                    .bold()
-            }
+                    // SOS Button - only active when offline
+                    Button(action: {
+                        if !networkMonitor.isConnected {
+                            sendSOS()
+                        }
+                    }) {
+                        Text("SOS")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundColor(networkMonitor.isConnected ? .gray : .red) // Gray when online, red when offline
+                            .opacity(networkMonitor.isConnected ? 0.5 : 1.0) // Semi-transparent when online
+                    }
+                    .disabled(networkMonitor.isConnected)
             
             NavigationLink {
                 HistoryView()
@@ -87,6 +103,23 @@ struct toolbarView: View {
                
             }
         }
+    }
+    
+    private func sendSOS() {
+        // Create an SOS message with current location
+        let sosMessage = Message(
+            id: UUID(),
+            content: "SOS - I need help at my location.",
+            latitude: locationManager.userLocation?.coordinate.latitude ?? 0.0,
+            longitude: locationManager.userLocation?.coordinate.longitude ?? 0.0,
+            timestamp: Date(),
+            status: .pendingSync,
+            category: .sos
+        )
+
+        // Broadcast SOS over Bluetooth
+        bluetoothManager.sendMessage(sosMessage)
+        showSOSAlert = true // Show confirmation alert
     }
 }
 
