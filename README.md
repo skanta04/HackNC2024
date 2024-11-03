@@ -260,14 +260,55 @@ class Message(SQLModel, table=True):
 - **database.py**: Manages database connection using SQLAlchemy
 - **main.py**: The main application file for FastAPI, defining API endpoints for message CRUD operations. Also includes a forced on startup method that was used to help create tables initially. Here is our main methods for messages:   
 
-    1. read_messages: Get all messages Method
+- read_messages: Get all messages Method
+```
+@app.get("/messages/", response_model=List[MessageDetails])
+def read_messages(db: Session = Depends(get_db_session)):
+    try:
+        return message_service.get_all_messages(db)
+    except Exception as e:
+        print(f"Error occurred while fetching messages: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error while fetching messages.")
+```
     
-    2. create_message : Creates(posts) messages
-    
-    3. update_message_status: Updates (puts) syncing status of messages
-    
-    4. delete_message: Deletes messages by id 
+- create_message : Creates(posts) messages
+```
+@app.post("/messages/", response_model=MessageDetails)
+def create_message(message_data: MessageCreate, db: Session = Depends(get_db_session)):
+    try:
+        return message_service.create_message(message_data, db)
+    except Exception as e:
+        print(f"Error occurred during message creation: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error while creating the message.")
+```
+- update_message_status: Updates (puts) syncing status of messages
+```
+@app.put("/messages/{message_id}/status", response_model=MessageDetails)
+def update_message_status(message_id: int, status: MessageStatus, db: Session = Depends(get_db_session)):
+    try:
+        updated_message = message_service.update_message_status(message_id, status, db)
+        if not updated_message:
+            raise HTTPException(status_code=404, detail="Message not found")
+        return updated_message
+    except Exception as e:
+        db.rollback()
+        print(f"Error occurred while updating the status of message with ID {message_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error while updating the message status.")
 
+``` 
+- delete_message: Deletes messages by id 
+```
+@app.delete("/messages/{message_id}")
+def delete_message(message_id: int, db: Session = Depends(get_db_session)):
+    try:
+        if not message_service.delete_message(message_id, db):
+            raise HTTPException(status_code=404, detail="Message not found")
+        return {"detail": "Message deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        print(f"Error occurred while deleting the message with ID {message_id}: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error while deleting the message.")
+```
 
 ---
 
