@@ -1,14 +1,31 @@
+# EchoAlert
 
+**EchoAlert** is a disaster response messaging application designed to work over Bluetooth, utilizing Apple's Core Data and Core Bluetooth. It enables users to communicate critical alerts and messages when cellular service is unavailable during natural disasters.
+
+
+## Project Structure
+
+
+#### RescueApp (Mobile Application)
+Blah Blah Insert general description here 
+
+
+#### PublicSync (Online Backend Lgic: REST API, AWS RDS Database Set up in Terraform)
+
+This folder contains the core components of the wifi enabled, Cloud-based backend of the EchoAlert project. We set up an AWS RDS instance of a PostgresQL database using Terraform, as well as an AWS EC2 server. We created Pydantic backend modeling for message tables in the database, as well as a RESTful API implemented using FastAPI to interact with the said database in our mobile application. 
+
+
+## IOS App Files and Logic
 
 ***Bluetooth Manager***
 
-Using Apple's Framework "CoreBluetooth", we created a function called Bluetooth Manager that creates Bluetooth communcaton between devices using both central and peripheral modes. This can scan for nearby devices, send messages, and receive messages. Additionally, received messsages are saved using SwiftData. 
+Using Apple's Framework "CoreBluetooth," we created a function called Bluetooth Manager that creates Bluetooth communication between devices using both central and peripheral modes. This can scan for nearby devices, send messages, and receive messages. Additionally, received messages are saved using SwiftData. 
 
 **What does it do?**
 
-1. Finds other Devices Nearby: It acts like a radar, sending for other Bluetooth devices around you. After testing, we saw that mininum range of distance is 30 feet and maximum is 75 feet for a Bluetooth connecction.
+1. Finds Other Devices Nearby: It acts like a radar, sending for other Bluetooth devices around you. After testing, we saw that the minimum range of distance is 30 feet and the maximum is 75 feet for a Bluetooth connection.
 
-2. Connects to other Devices: Once it finds a device that is connected to Bluetooth, it connects to it and either receives messages and send messages to it.
+2. Connects to other Devices: Once it finds a device that is connected to Bluetooth, it connects to it and either receives messages and sends messages to it.
 
 3. Saves Messages: It can save messages that you receive, so you can check them when you're connected to Wifi and when you're not connected.
 
@@ -152,6 +169,7 @@ ChatGPT for debugging!
 
 
 
+## PublicSync Backend Logic
 
 
 
