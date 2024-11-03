@@ -12,6 +12,7 @@ import SwiftUI
 struct HistoryView: View {
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject private var bluetoothManager = BluetoothManager()
+    @StateObject private var locationManager = LocationManager()
     @Environment(\.modelContext) var context
     
     @State private var createNewBook = false
@@ -40,7 +41,7 @@ struct HistoryView: View {
                 }
             }
             .sheet(isPresented: $createNewBook) {
-                NewMessageView(bluetoothManager: bluetoothManager) // Pass BluetoothManager to NewMessageView
+                NewMessageView(bluetoothManager: bluetoothManager, locationManager: locationManager) // Pass BluetoothManager to NewMessageView
                     .presentationDetents([.medium])
             }
             .onAppear {
@@ -63,10 +64,6 @@ private let dateFormatter: DateFormatter = {
     return formatter
 }()
 
-
-#Preview {
-    HistoryView()
-}
 
 #Preview {
     HistoryView()
