@@ -53,6 +53,16 @@ struct HistoryView: View {
                     fetchMessagesFromCloud()
                 }
             }
+            .onChange(of: networkMonitor.isConnected) {
+                if networkMonitor.isConnected {
+                    print("Network status changed: Online")
+                    syncMessagesToCloud()
+                    print("i synced messages")
+                    fetchMessagesFromCloud()
+                } else {
+                    print("Network status changed: Offline")
+                }
+            }
         }
     }
 }
