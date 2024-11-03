@@ -27,7 +27,8 @@ struct MapView: View {
     
     // view specific
     @State private var createMessage = false
-    @State private var showSOSAlert = false
+    @State private var sendSOSAlert = false
+    @State private var receiveSOSAlert = false
 
     var body: some View {
         NavigationStack {
@@ -36,7 +37,7 @@ struct MapView: View {
                     MapMarker(coordinate: CLLocationCoordinate2D(latitude: message.latitude, longitude: message.longitude))
                 })
             
-            toolbarView(createMessage: $createMessage, showSOSAlert: $showSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
+            toolbarView(createMessage: $createMessage, sendSOSAlert: $sendSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
 
         }
         .onAppear {
@@ -58,7 +59,7 @@ struct MapView: View {
             NewMessageView(bluetoothManager: bluetoothManager, locationManager: locationManager) // Pass BluetoothManager to NewMessageView
                 .presentationDetents([.medium])
         }
-        .alert(isPresented: $showSOSAlert) {
+        .alert(isPresented: $sendSOSAlert) {
             Alert(title: Text("SOS Sent"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
         }
     }
@@ -66,7 +67,7 @@ struct MapView: View {
 
 struct toolbarView: View {
     @Binding var createMessage: Bool
-    @Binding var showSOSAlert: Bool
+    @Binding var sendSOSAlert: Bool
     @ObservedObject var networkMonitor: NetworkMonitor
     @ObservedObject var bluetoothManager: BluetoothManager
     var locationManager: LocationManager
@@ -119,7 +120,7 @@ struct toolbarView: View {
 
         // Broadcast SOS over Bluetooth
         bluetoothManager.sendMessage(sosMessage)
-        showSOSAlert = true // Show confirmation alert
+        sendSOSAlert = true // Show confirmation alert
     }
 }
 
