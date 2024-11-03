@@ -2,8 +2,17 @@
 
 **EchoAlert** is a disaster response messaging application designed to work over Bluetooth, utilizing Apple's Swift Data and Core Bluetooth. It enables users to communicate critical alerts and messages when cellular service is unavailable during natural disasters.
 
+## Initial Design
+<img width="467" alt="Screenshot 2024-11-03 at 11 21 04 AM" src="https://github.com/user-attachments/assets/b276e9fa-06ca-4d79-9a9c-3f27a66bf9b0">
+
+## Final Product
+<img src="https://github.com/user-attachments/assets/613cf302-6828-4d2d-b84c-088471965c54" alt="IMG_8722" width="150"/>
+<img src="https://github.com/user-attachments/assets/1771eccd-6f9d-4c1b-9619-bee5109b33d4" alt="IMG_8723" width="150"/>
+<img src="https://github.com/user-attachments/assets/cb128035-da23-4027-9720-ad3b43a673fe" alt="IMG_8724" width="150"/>
+<img src="https://github.com/user-attachments/assets/7fa47363-cea5-46c4-8454-5903253b44a7" alt="IMG_8725" width="150"/>
 
 ## Project Structure
+
 
 
 #### RescueApp (iOS Application)
