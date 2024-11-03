@@ -83,31 +83,31 @@ enum MessageCategory: String, Codable {
 
 extension Message {
     static let example1 = Message(id: UUID(),
-                                  content: "Toilet paper",
-                                  latitude: 10.0,
-                                  longitude: 10.0,
-                                  timestamp: Date(),
-                                  status: .synced,
-                                  category: .resource)
-    static let example2 = Message(id: UUID(),
-                                  content: "Flash flooding",
-                                  latitude: 20.0,
-                                  longitude: 20.0,
+                                  content: "Hamilton Hall flooding",
+                                  latitude: 35.911595,
+                                  longitude:  -79.048759,
                                   timestamp: Date(),
                                   status: .synced,
                                   category: .flooding)
-    static let example3 = Message(id: UUID(),
-                                  content: "Need help!",
-                                  latitude: 30.0,
-                                  longitude: 30.0,
+    static let example2 = Message(id: UUID(),
+                                  content: "Emergency on Franklin Street!",
+                                  latitude: 35.9132,
+                                  longitude: -79.05584,
                                   timestamp: Date(),
                                   status: .synced,
                                   category: .sos)
-    static let example4 = Message(id: UUID(),
-                                  content: "Road blocked!",
-                                  latitude: 40.0,
-                                  longitude: 40.0,
+    static let example3 = Message(id: UUID(),
+                                  content: "Student stores offering water",
+                                  latitude: 35.91,
+                                  longitude: -79.05,
                                   timestamp: Date(),
                                   status: .synced,
-                                  category: .roadClosure)
+                                  category: .resource)
+    static let example4 = Message(id: UUID(),
+                                  content: "Toilet paper needed at Morrison!",
+                                  latitude: 35.904493,
+                                  longitude: -79.046159,
+                                  timestamp: Date(),
+                                  status: .synced,
+                                  category: .other)
 }

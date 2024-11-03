@@ -58,6 +58,8 @@ struct MapView: View {
             locationManager.requestLocationAccess()
             // Assign the context to BluetoothManager to allow saving received messages locally
             bluetoothManager.context = context
+            
+            addMockData()
 
             if networkMonitor.isConnected {
                 syncMessagesToCloud()
@@ -103,6 +105,17 @@ struct MapView: View {
         case .other:
             OtherPin()
         }
+    }
+    
+    private func addMockData() {
+        context.insert(Message.example1) // Save locally
+        bluetoothManager.sendMessage(Message.example1) // Send full message via Bluetooth
+        context.insert(Message.example2) // Save locally
+        bluetoothManager.sendMessage(Message.example2) // Send full message via Bluetooth
+        context.insert(Message.example3) // Save locally
+        bluetoothManager.sendMessage(Message.example3) // Send full message via Bluetooth
+        context.insert(Message.example4) // Save locally
+        bluetoothManager.sendMessage(Message.example4) // Send full message via Bluetooth
     }
 }
 
