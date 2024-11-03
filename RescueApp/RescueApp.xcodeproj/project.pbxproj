@@ -17,6 +17,7 @@
 		C4DB85E32CD6943B000E619E /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E22CD6943B000E619E /* NewMessageView.swift */; };
 		C4DB85E52CD6A811000E619E /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */; };
 		C4DB85E72CD6A942000E619E /* CloudFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85E62CD6A942000E619E /* CloudFunctions.swift */; };
+		C4DB85F12CD71892000E619E /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DB85F02CD71892000E619E /* LoadingView.swift */; };
 		F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B42CD6A8070031957B /* LocationManager.swift */; };
 		F8A5C1BA2CD6ADA80031957B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8A5C1B92CD6ADA80031957B /* MapView.swift */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		C4DB85E22CD6943B000E619E /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
 		C4DB85E42CD6A811000E619E /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		C4DB85E62CD6A942000E619E /* CloudFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudFunctions.swift; sourceTree = "<group>"; };
+		C4DB85F02CD71892000E619E /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		F8A5C1B42CD6A8070031957B /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		F8A5C1B92CD6ADA80031957B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -97,6 +99,7 @@
 				C4DB85CD2CD671AF000E619E /* ContentView.swift */,
 				C4DB85E22CD6943B000E619E /* NewMessageView.swift */,
 				F8A5C1B92CD6ADA80031957B /* MapView.swift */,
+				C4DB85F02CD71892000E619E /* LoadingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 				C4DB85CE2CD671AF000E619E /* ContentView.swift in Sources */,
 				C4DB85DA2CD67EE8000E619E /* MessageModel.swift in Sources */,
 				C4DB85DF2CD68E10000E619E /* HistoryView.swift in Sources */,
+				C4DB85F12CD71892000E619E /* LoadingView.swift in Sources */,
 				F8A5C1B52CD6A8070031957B /* LocationManager.swift in Sources */,
 				C4DB85E32CD6943B000E619E /* NewMessageView.swift in Sources */,
 				B1DB52F42CD6834900F2C717 /* BluetoothManager.swift in Sources */,
