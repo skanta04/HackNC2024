@@ -17,7 +17,7 @@ This folder contains the core components of the wifi enabled, Cloud-based backen
 
 ## IOS App Files and Logic
 
-***Bluetooth Manager***
+1. ***Bluetooth Manager***
 
 Using Apple's Framework "CoreBluetooth," we created a function called Bluetooth Manager that creates Bluetooth communication between devices using both central and peripheral modes. This can scan for nearby devices, send messages, and receive messages. Additionally, received messages are saved using SwiftData. 
 
@@ -167,7 +167,70 @@ https://medium.com/@kalidoss.shanmugam/send-and-receive-data-between-two-iphone-
 
 ChatGPT for debugging! 
 
+2. **Cloud Functions** - These functions are used to post and get from the local database to the cloud database dynamically so we can update the map based on being online or offline
 
+- `syncMessagedToCloud` function uploads any unsynced (offline) messages to the cloud once the user is online, marking them as `synced` locally after successful upload. This keeps everyone updated with the latest alerts created offline.
+```
+func syncMessagesToCloud() {
+        let pendingMessages = messages.filter { $0.status == .pendingSync }
+        for message in pendingMessages {
+            postToCloud(message) { success in
+                if success {
+                    message.status = .synced
+                    try? context.save()
+                }
+            }
+        }
+```
+
+- `postToCloud` sends each message to the cloud server via a POST request. It ensures messages are correctly formatted and uploaded without errors.
+```
+private func postToCloud(_ message: Message, completion: @escaping (Bool) -> Void) {
+    guard let url = URL(string: "http://98.80.6.198:8000/messages") else { return }
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    let jsonMessage = try? JSONEncoder().encode(message)
+    request.httpBody = jsonMessage
+
+    URLSession.shared.dataTask(with: request) { _, _, error in
+        completion(error == nil)
+    }.resume()
+}
+```
+
+
+- `fetchMessagesFromCloud` retrieves the latest messages from the cloud server when online, ensuring the app has access to all recent updates from other users. Each fetched message is marked as synced.
+```
+func fetchMessagesFromCloud() {
+     guard let url = URL(string: "http://98.80.6.198:8000/messages") else { return }
+
+    URLSession.shared.dataTask(with: url) { data, _, _ in
+        if let data = data {
+            var cloudMessages = try? JSONDecoder().decode([Message].self, from: data)
+            cloudMessages?.forEach { $0.status = .synced } 
+
+        DispatchQueue.main.async {
+            self.mergeCloudMessages(cloudMessages ?? [])       
+        }
+    }
+ }.resume()
+ }
+```
+
+
+- `mergeCloudMessages` checks for duplicates and merges new cloud messages with local data, ensuring the user has a complete and up-to-date set of alerts.
+```
+private func mergeCloudMessages(_ cloudMessages: [Message]) {
+    for cloudMessage in cloudMessages {
+        if messages.allSatisfy({ $0.id != cloudMessage.id }) {
+            context.insert(cloudMessage)
+            }
+        }
+        try? context.save()
+    }
+```
 
 ## PublicSync Backend Logic
 
