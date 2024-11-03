@@ -23,35 +23,19 @@ struct NewMessageView: View {
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Content", text: $content)
-                                
-                HStack {
-                    Text("Latitude")
-                    TextField("Latitude", value: $latitude, format: .number)
-                        .keyboardType(.decimalPad)
-                }
-                                
-                HStack {
-                    Text("Longitude")
-                    TextField("Longitude", value: $longitude, format: .number)
-                        .keyboardType(.decimalPad)
-                }
-                                
-                DatePicker("Timestamp", selection: $timestamp, displayedComponents: .date)
-                                
-                Picker("Status", selection: $status) {
-                    Text("Pending Sync").tag(MessageStatus.pendingSync)
-                    Text("Synced").tag(MessageStatus.synced)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                                
-                Picker("Category", selection: $category) {
-                    Text("Road Closure").tag(MessageCategory.roadClosure)
-                    Text("Flooding").tag(MessageCategory.flooding)
-                    Text("Shelter").tag(MessageCategory.shelter)
-                    Text("Resource").tag(MessageCategory.resource)
-                    Text("SOS").tag(MessageCategory.sos)
-                    Text("Other").tag(MessageCategory.other)
+                Section("Create a New Message") {
+                    TextField("Description", text: $content)
+                    
+                    DatePicker("Timestamp", selection: $timestamp, displayedComponents: .date)
+                    
+                    Picker("Category", selection: $category) {
+                        Text("Road Closure").tag(MessageCategory.roadClosure)
+                        Text("Flooding").tag(MessageCategory.flooding)
+                        Text("Shelter").tag(MessageCategory.shelter)
+                        Text("Resource").tag(MessageCategory.resource)
+                        Text("SOS").tag(MessageCategory.sos)
+                        Text("Other").tag(MessageCategory.other)
+                    }
                 }
             }
                             
