@@ -30,8 +30,9 @@ struct MapView: View {
 
     var body: some View {
         NavigationStack {
-            Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: messages,
-                annotationContent: { message in
+            ZStack {
+                Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: messages,
+                    annotationContent: { message in
                     MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: message.latitude, longitude: message.longitude)) {
                         pinView(for: message)
                             .scaleEffect(selectedPin == message ? 1.2 : 1.0)
@@ -41,8 +42,17 @@ struct MapView: View {
                     }
                 })
                 .ignoresSafeArea()
-
-            ToolbarView(createMessage: $createMessage, sendSOSAlert: $sendSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
+                
+                VStack {
+                    if let selectedPin {
+                        MessageView(currentLocation: locationManager.userLocation!.coordinate, message: selectedPin)
+                            .padding(.top)
+                    }
+                    Spacer()
+                    ToolbarView(createMessage: $createMessage, sendSOSAlert: $sendSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
+                        .padding(.bottom)
+                }
+            }
         }
         .onAppear {
             locationManager.requestLocationAccess()

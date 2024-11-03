@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import SwiftUI
+import MapKit
 
 struct HistoryView: View {
     @StateObject private var networkMonitor = NetworkMonitor()
@@ -20,14 +21,9 @@ struct HistoryView: View {
 
     var body: some View {
         NavigationStack {
-            List(messages) { message in
-                VStack(alignment: .leading) {
-                    Text(message.content)
-                        .font(.headline)
-                    Text("Category: \(message.category.rawValue)")
-                    Text("Status: \(message.status.rawValue)")
-                    Text("Timestamp: \(message.timestamp, formatter: dateFormatter)")
-                        .font(.caption)
+            ScrollView {
+                ForEach(messages) { message in
+                    MessageView(currentLocation: locationManager.userLocation?.coordinate ?? CLLocationCoordinate2D(latitude: 10.0, longitude: 10.0), message: message)
                 }
             }
             .padding()

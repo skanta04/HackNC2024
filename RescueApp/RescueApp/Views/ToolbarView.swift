@@ -15,38 +15,61 @@ struct ToolbarView: View {
     var locationManager: LocationManager
     
     var body: some View {
-        HStack(spacing: 75) {
-            // SOS Button - only active when offline
-            Button(action: {
-                if !networkMonitor.isConnected {
-                    sendSOS()
-                }
-            }) {
-                Text("SOS")
-                    .font(.largeTitle)
-                    .bold()
-                    .foregroundColor(networkMonitor.isConnected ? .gray : .red) // Gray when online, red when offline
-                    .opacity(networkMonitor.isConnected ? 0.5 : 1.0) // Semi-transparent when online
-            }
-            .disabled(networkMonitor.isConnected)
-            
-            NavigationLink {
-                HistoryView()
-            } label: {
-                Image(systemName: "book")
-                    .font(.largeTitle)
-                
-            }
-            
-            Button {
-                createMessage = true
-            } label: {
-                Image(systemName: "plus.circle")
-                    .font(.largeTitle)
-                
-            }
-        }
-    }
+         HStack(spacing: 40) {
+             // SOS Button - Only active when offline
+             Button(action: {
+                 if !networkMonitor.isConnected {
+                     sendSOS()
+                 }
+             }) {
+                 VStack {
+                     Image(systemName: "sos.circle.fill")
+                         .font(.system(size: 50))
+                         .foregroundStyle(networkMonitor.isConnected ? .gray : Color("red"))
+                         .opacity(networkMonitor.isConnected ? 0.6 : 1.0)
+                     Text("SOS")
+                         .bold()
+                         .font(.footnote)
+                         .fontDesign(.rounded)
+                         .foregroundStyle(.white)
+                 }
+             }
+             .disabled(networkMonitor.isConnected)
+             
+             NavigationLink(destination: HistoryView()) {
+                 VStack {
+                     Image(systemName: "list.bullet.circle.fill")
+                         .font(.system(size: 50))
+                         .foregroundStyle(Color("lightblue"))
+                     Text("History")
+                         .bold()
+                         .font(.footnote)
+                         .fontDesign(.rounded)
+                         .foregroundStyle(.white)
+                 }
+             }
+             
+             Button {
+                 createMessage = true
+             } label: {
+                 VStack {
+                     Image(systemName: "plus.circle.fill")
+                         .font(.system(size: 50))
+                         .foregroundStyle(Color("green"))
+                     Text("Message")
+                         .bold()
+                         .font(.footnote)
+                         .fontDesign(.rounded)
+                         .foregroundStyle(.white)
+                 }
+             }
+         }
+         .padding(.horizontal, 40)
+         .padding(.vertical, 15)
+         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+         .shadow(radius: 8, y: 4) // Soft shadow for a floating effect
+         .padding(.bottom, 20)
+     }
     
     private func sendSOS() {
         // Create an SOS message with current location

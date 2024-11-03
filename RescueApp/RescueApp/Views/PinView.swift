@@ -20,14 +20,6 @@ struct FloodPin: View {
                         .frame(width: 33, height: 33)
                 }
                 .padding(.bottom, 6)
-//            Image(systemName: "triangle.fill")
-//                .resizable()
-//                .scaledToFit()
-//                .frame(width: 10, height: 10)
-//                .rotationEffect(Angle(degrees: 180))
-//                .offset(y: -4)
-//                .foregroundStyle(Color("blue"))
-//                .padding(.bottom)
         }
     }
 }
