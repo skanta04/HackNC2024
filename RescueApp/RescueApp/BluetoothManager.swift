@@ -4,7 +4,6 @@
 //
 //  Created by Sruthy Mammen on 11/2/24.
 //
-
 import CoreBluetooth
 import SwiftUI
 import SwiftData
@@ -25,17 +24,12 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
 
     override init() {
         super.init()
-        startAsCentral()
-        startAsPeripheral()
+        initializeBluetoothManagers()
     }
     
-    func startAsCentral() {
-        print("Initializing as Central")
+    private func initializeBluetoothManagers() {
+        // Reinitialize both central and peripheral managers
         centralManager = CBCentralManager(delegate: self, queue: nil)
-    }
-    
-    func startAsPeripheral() {
-        print("Initializing as Peripheral")
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil)
     }
     
@@ -44,13 +38,19 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state == .poweredOn {
             isBluetoothAvailable = true
-            centralManager?.scanForPeripherals(withServices: [serviceUUID], options: nil)
-            print("Central started scanning for peripherals...")
+            startScanning()
         } else if central.state == .poweredOff {
             isBluetoothAvailable = false
+            centralManager?.stopScan()
             print("Central Bluetooth is powered off.")
-            centralManager?.stopScan() // Stop scanning when Bluetooth is turned off
+        } else {
+            print("Central Bluetooth state: \(central.state.rawValue)")
         }
+    }
+    
+    private func startScanning() {
+        centralManager?.scanForPeripherals(withServices: [serviceUUID], options: nil)
+        print("Central started scanning for peripherals...")
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
@@ -104,24 +104,34 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         if peripheral.state == .poweredOn {
-            let characteristic = CBMutableCharacteristic(
-                type: characteristicUUID,
-                properties: [.notify, .write],
-                value: nil,
-                permissions: [.readable, .writeable]
-            )
-            
-            let service = CBMutableService(type: serviceUUID, primary: true)
-            service.characteristics = [characteristic]
-            peripheralManager?.add(service)
-            
-            self.characteristic = characteristic
-            peripheralManager?.startAdvertising([CBAdvertisementDataServiceUUIDsKey: [serviceUUID]])
-            print("Peripheral started advertising...")
+            setupPeripheralCharacteristic()
+            startAdvertising()
         } else if peripheral.state == .poweredOff {
+            peripheralManager?.stopAdvertising()
             print("Peripheral Bluetooth is powered off.")
-            peripheralManager?.stopAdvertising() // Stop advertising when Bluetooth is turned off
+        } else {
+            print("Peripheral Bluetooth state: \(peripheral.state.rawValue)")
         }
+    }
+    
+    private func setupPeripheralCharacteristic() {
+        let characteristic = CBMutableCharacteristic(
+            type: characteristicUUID,
+            properties: [.notify, .write],
+            value: nil,
+            permissions: [.readable, .writeable]
+        )
+        
+        let service = CBMutableService(type: serviceUUID, primary: true)
+        service.characteristics = [characteristic]
+        peripheralManager?.add(service)
+        
+        self.characteristic = characteristic
+    }
+    
+    private func startAdvertising() {
+        peripheralManager?.startAdvertising([CBAdvertisementDataServiceUUIDsKey: [serviceUUID]])
+        print("Peripheral started advertising...")
     }
     
     func sendMessage(_ message: Message) {
