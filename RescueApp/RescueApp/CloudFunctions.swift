@@ -95,6 +95,7 @@ extension MapView {
 
                 DispatchQueue.main.async {
                     self.mergeCloudMessages(cloudMessages ?? [])
+                    
                 }
             }
         }.resume()
