@@ -12,6 +12,7 @@ import SwiftData
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralManagerDelegate, CBPeripheralDelegate {
     @Published var isBluetoothAvailable = false
     @Published var receivedMessage: String = ""
+    @Published var showSOSReceivedAlert = false
     
     private var centralManager: CBCentralManager?
     private var peripheralManager: CBPeripheralManager?
@@ -89,6 +90,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
                 DispatchQueue.main.async {
                     message.status = .pendingSync // Set default status for Bluetooth messages
                     self.receivedMessage = message.content
+                    
+                    if message.category == .sos {
+                        self.showSOSReceivedAlert = true
+                    }
                     
                     // Save received message to local SwiftData if context is available
                     if let context = self.context {

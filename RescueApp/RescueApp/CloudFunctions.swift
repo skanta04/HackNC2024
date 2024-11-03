@@ -21,7 +21,7 @@ extension HistoryView {
     }
 
     private func postToCloud(_ message: Message, completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "https://your-public-api-url/messages") else { return }
+        guard let url = URL(string: "http://98.80.6.198:8000/messages") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -35,7 +35,7 @@ extension HistoryView {
     }
 
     func fetchMessagesFromCloud() {
-        guard let url = URL(string: "https://your-public-api-url/messages") else { return }
+        guard let url = URL(string: "http://98.80.6.198:8000/messages") else { return }
 
         URLSession.shared.dataTask(with: url) { data, _, _ in
             if let data = data {
