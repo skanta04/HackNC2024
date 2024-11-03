@@ -10,35 +10,49 @@ import SwiftData
 import SwiftUI
 
 struct MapView: View {
-    // bluetooth and network
-    @ObservedObject private var networkMonitor = NetworkMonitor()
-    @ObservedObject private var bluetoothManager = BluetoothManager()
-    
-    // location
-    @StateObject var locationManager = LocationManager()
-    @State private var region: MKCoordinateRegion = .init(
-        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Default to San Francisco
-        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-    )
-
-    // local storage
     @Environment(\.modelContext) var context
     @Query(sort: \Message.timestamp, order: .reverse) var messages: [Message]
-    
-    // view specific
+
+    @StateObject private var networkMonitor = NetworkMonitor()
+    @ObservedObject var bluetoothManager: BluetoothManager
+    @ObservedObject var locationManager: LocationManager
+
+    @State private var region: MKCoordinateRegion = .init(
+        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Default to San Francisco
+        span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+    )
+
+    @State var selectedPin: Message?
     @State private var createMessage = false
     @State private var sendSOSAlert = false
     @State private var receiveSOSAlert = false
+    @State private var SOSAlertMessage = ""
 
     var body: some View {
         NavigationStack {
-            Map(coordinateRegion: $region, showsUserLocation: true, userTrackingMode: .constant(.follow), annotationItems: messages,
-                annotationContent: { message in
-                    MapMarker(coordinate: CLLocationCoordinate2D(latitude: message.latitude, longitude: message.longitude))
+            ZStack {
+                Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: messages,
+                    annotationContent: { message in
+                    MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: message.latitude, longitude: message.longitude)) {
+                        pinView(for: message)
+                            .scaleEffect(selectedPin == message ? 1.2 : 1.0)
+                            .onTapGesture {
+                                selectedPin = message
+                            }
+                    }
                 })
-            
-            toolbarView(createMessage: $createMessage, sendSOSAlert: $sendSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
-
+                .ignoresSafeArea()
+                
+                VStack {
+                    if let selectedPin {
+                        MessageView(currentLocation: locationManager.userLocation!.coordinate, message: selectedPin)
+                            .padding(.top)
+                    }
+                    Spacer()
+                    ToolbarView(createMessage: $createMessage, sendSOSAlert: $sendSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
+                        .padding(.bottom)
+                }
+            }
         }
         .onAppear {
             locationManager.requestLocationAccess()
@@ -58,6 +72,7 @@ struct MapView: View {
         .onChange(of: messages) { _ in
             if let firstMessage = messages.first, firstMessage.category == .sos {
                 receiveSOSAlert = true
+                SOSAlertMessage = "Someone needs help at \(firstMessage.latitude), \(firstMessage.longitude)"
             }
         }
         .sheet(isPresented: $createMessage) {
@@ -68,70 +83,29 @@ struct MapView: View {
             Alert(title: Text("SOS Sent"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
         }
         .alert(isPresented: $receiveSOSAlert) {
-            Alert(title: Text("SOS Received"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
+            Alert(title: Text("SOS Received"), message: Text(SOSAlertMessage), dismissButton: .default(Text("OK")))
         }
     }
-}
 
-struct toolbarView: View {
-    @Binding var createMessage: Bool
-    @Binding var sendSOSAlert: Bool
-    @ObservedObject var networkMonitor: NetworkMonitor
-    @ObservedObject var bluetoothManager: BluetoothManager
-    var locationManager: LocationManager
-    
-    var body: some View {
-        HStack(spacing: 75) {
-            // SOS Button - only active when offline
-            Button(action: {
-                if !networkMonitor.isConnected {
-                    sendSOS()
-                }
-            }) {
-                Text("SOS")
-                    .font(.largeTitle)
-                    .bold()
-                    .foregroundColor(networkMonitor.isConnected ? .gray : .red) // Gray when online, red when offline
-                    .opacity(networkMonitor.isConnected ? 0.5 : 1.0) // Semi-transparent when online
-            }
-            .disabled(networkMonitor.isConnected)
-            
-            NavigationLink {
-                HistoryView()
-            } label: {
-                Image(systemName: "book")
-                    .font(.largeTitle)
-                
-            }
-            
-            Button {
-                createMessage = true
-            } label: {
-                Image(systemName: "plus.circle")
-                    .font(.largeTitle)
-                
-            }
+    @ViewBuilder
+    private func pinView(for message: Message) -> some View {
+        switch message.category {
+        case .flooding:
+            FloodPin()
+        case .roadClosure:
+            RoadPin()
+        case .shelter:
+            ShelterPin()
+        case .sos:
+            SosPin()
+        case .resource:
+            ResourcePin()
+        case .other:
+            OtherPin()
         }
-    }
-    
-    private func sendSOS() {
-        // Create an SOS message with current location
-        let sosMessage = Message(
-            id: UUID(),
-            content: "SOS - I need help at my location.",
-            latitude: locationManager.userLocation?.coordinate.latitude ?? 0.0,
-            longitude: locationManager.userLocation?.coordinate.longitude ?? 0.0,
-            timestamp: Date(),
-            status: .pendingSync,
-            category: .sos
-        )
-        
-        // Broadcast SOS over Bluetooth
-        bluetoothManager.sendMessage(sosMessage)
-        sendSOSAlert = true // Show confirmation alert
     }
 }
 
 #Preview {
-    MapView()
+    MapView(bluetoothManager: BluetoothManager(), locationManager: LocationManager())
 }

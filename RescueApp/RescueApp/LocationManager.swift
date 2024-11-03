@@ -29,7 +29,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             hasLocationAccess = false
         case .authorizedAlways, .authorizedWhenInUse:
             hasLocationAccess = true
-            manager.startUpdatingLocation()
+            manager.requestLocation()
         default:
             break
         }

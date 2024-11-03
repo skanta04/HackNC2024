@@ -12,7 +12,7 @@ import SwiftData
 struct RescueAppApp: App {
     var body: some Scene {
         WindowGroup {
-            MapView()
+            ContentView()
         }
         .modelContainer(for: Message.self)
     }
