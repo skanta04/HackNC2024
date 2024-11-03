@@ -235,4 +235,73 @@ private func mergeCloudMessages(_ cloudMessages: [Message]) {
 ## PublicSync Backend Logic
 
 
+### rescueAPI Folder
+
+This folder contains the backend API, built with FastAPI and SQLAlchemy, which powers EchoAlert's data handling and storage. It includes:
+
+- **entities**: Defines the data models and tables used in the backend, like `message.py`. This is the strucutre of our table and what our models are based. 
+
+```
+
+class Message(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    content: str
+    latitude: float
+    longitude: float
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))  
+    status: MessageStatus
+    category: MessageCategory
+
+
+```
+
+- **models**: Pydantic models for request and response schemas, such as `message_create.py` and `message_details.py`
+- **services**: Contains logic for handling CRUD (create, read, update, delete) operations with `message_service.py`
+- **database.py**: Manages database connection using SQLAlchemy
+- **main.py**: The main application file for FastAPI, defining API endpoints for message CRUD operations. Also includes a forced on startup method that was used to help create tables initially. Here is our main methods for messages:   
+
+    1. read_messages: Get all messages Method
+    
+    2. create_message : Creates(posts) messages
+    
+    3. update_message_status: Updates (puts) syncing status of messages
+    
+    4. delete_message: Deletes messages by id 
+
+
+---
+
+### terraform Folder
+
+This folder contains the configuration files for setting up AWS infrastructure using Terraform. The configurations include provisioning an RDS PostgreSQL instance, EC2 instances, and necessary security configurations for the backend.
+
+- `main.tf`: This file helped define and provision cloud infrastructure on AWS:
+
+    1. AWS Provider Configuration: Defines AWS region for infrastructure deployment
+
+    2.  Virtual Private Cloud (VPC) : Provides a secure, isolated environment for all resources
+
+
+    3. Internet Gateway and Route Table : Enables internet connectivity for resources within the VPC.
+
+    4. Subnets and Route Table Associations : Creates subnets for resource placement across multiple availability zones
+
+    5. RDS PostgreSQL Database: Sets up a PostgreSQL database with high availability
+ 
+
+    7. EC2 Instance: Provisions an EC2 instance for backend service hosting
+
+    8. Outputs: Outputs connection details for EC2 and RDS instances
+
+
+- All other files are initilized when declaring the directory as a terraform directory using `terraform init` command
+
+#### Resouces for PublicSync
+
+- We used Terraform documentation that can be found all throughout Hashicorp's Terraform registry website.
+- We utilized ChatGPT for configuration assistance and bug fixes when facing internal server connectivity issues
+- Upasana works with AWS 5 days a week at her job and was able to bug fix throughout the management console when needed to tweak TF configs.
+
+
+
 
