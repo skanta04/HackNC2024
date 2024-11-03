@@ -283,6 +283,7 @@ When the app initializes, the LocationManager is instantiated and performs sever
         print("Failed to get user location: \(error.localizedDescription)")
     }
     ```
+**Used ChatGPT for debugging!**
 
 ### Network Monitor
 
