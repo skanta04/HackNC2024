@@ -27,7 +27,8 @@ struct MapView: View {
     
     // view specific
     @State private var createMessage = false
-    @State private var showSOSAlert = false
+    @State private var sendSOSAlert = false
+    @State private var receiveSOSAlert = false
 
     var body: some View {
         NavigationStack {
@@ -36,7 +37,7 @@ struct MapView: View {
                     MapMarker(coordinate: CLLocationCoordinate2D(latitude: message.latitude, longitude: message.longitude))
                 })
             
-            toolbarView(createMessage: $createMessage, showSOSAlert: $showSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
+            toolbarView(createMessage: $createMessage, sendSOSAlert: $sendSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
 
         }
         .onAppear {
@@ -54,45 +55,53 @@ struct MapView: View {
                 region.center = newLocation.coordinate
             }
         }
+        .onChange(of: messages) { _ in
+            if let firstMessage = messages.first, firstMessage.category == .sos {
+                receiveSOSAlert = true
+            }
+        }
         .sheet(isPresented: $createMessage) {
             NewMessageView(bluetoothManager: bluetoothManager, locationManager: locationManager) // Pass BluetoothManager to NewMessageView
                 .presentationDetents([.medium])
         }
-        .alert(isPresented: $showSOSAlert) {
+        .alert(isPresented: $sendSOSAlert) {
             Alert(title: Text("SOS Sent"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
+        }
+        .alert(isPresented: $receiveSOSAlert) {
+            Alert(title: Text("SOS Received"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
         }
     }
 }
 
 struct toolbarView: View {
     @Binding var createMessage: Bool
-    @Binding var showSOSAlert: Bool
+    @Binding var sendSOSAlert: Bool
     @ObservedObject var networkMonitor: NetworkMonitor
     @ObservedObject var bluetoothManager: BluetoothManager
     var locationManager: LocationManager
     
     var body: some View {
         HStack(spacing: 75) {
-                    // SOS Button - only active when offline
-                    Button(action: {
-                        if !networkMonitor.isConnected {
-                            sendSOS()
-                        }
-                    }) {
-                        Text("SOS")
-                            .font(.largeTitle)
-                            .bold()
-                            .foregroundColor(networkMonitor.isConnected ? .gray : .red) // Gray when online, red when offline
-                            .opacity(networkMonitor.isConnected ? 0.5 : 1.0) // Semi-transparent when online
-                    }
-                    .disabled(networkMonitor.isConnected)
+            // SOS Button - only active when offline
+            Button(action: {
+                if !networkMonitor.isConnected {
+                    sendSOS()
+                }
+            }) {
+                Text("SOS")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(networkMonitor.isConnected ? .gray : .red) // Gray when online, red when offline
+                    .opacity(networkMonitor.isConnected ? 0.5 : 1.0) // Semi-transparent when online
+            }
+            .disabled(networkMonitor.isConnected)
             
             NavigationLink {
                 HistoryView()
             } label: {
                 Image(systemName: "book")
                     .font(.largeTitle)
-                 
+                
             }
             
             Button {
@@ -100,7 +109,7 @@ struct toolbarView: View {
             } label: {
                 Image(systemName: "plus.circle")
                     .font(.largeTitle)
-               
+                
             }
         }
     }
@@ -116,10 +125,10 @@ struct toolbarView: View {
             status: .pendingSync,
             category: .sos
         )
-
+        
         // Broadcast SOS over Bluetooth
         bluetoothManager.sendMessage(sosMessage)
-        showSOSAlert = true // Show confirmation alert
+        sendSOSAlert = true // Show confirmation alert
     }
 }
 
