@@ -231,6 +231,27 @@ private func mergeCloudMessages(_ cloudMessages: [Message]) {
         try? context.save()
     }
 ```
+3. **Location Manager**
+4. **Network Monitor** - Observes connectivity on your phone. The `NWPathMonitor` detects a change in this connectivity. It updates the `IsConnected` property dynamically based on online or offline and publishes this property to the rest of the app, which allows the app to respond to connectivity changes in real time. 
+```
+class NetworkMonitor: ObservableObject {
+    private var monitor = NWPathMonitor()
+    private let queue = DispatchQueue.global()
+    
+    @Published var isConnected: Bool = false
+    
+    init() {
+        monitor.pathUpdateHandler = { [weak self] path in
+            DispatchQueue.main.async {
+                self?.isConnected = (path.status == .satisfied)
+                print("NetworkMonitor detected network change: \(self?.isConnected == true ? "Online" : "Offline")")
+            }
+        }
+        monitor.start(queue: queue)
+    }
+}
+```
+**Used ChatGPT and a couple of Youtube videos for this logic!**
 
 ## PublicSync Backend Logic
 
