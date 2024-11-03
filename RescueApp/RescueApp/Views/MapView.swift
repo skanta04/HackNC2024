@@ -10,25 +10,22 @@ import SwiftData
 import SwiftUI
 
 struct MapView: View {
-    // bluetooth and network
-    @ObservedObject private var networkMonitor = NetworkMonitor()
-    @ObservedObject private var bluetoothManager = BluetoothManager()
+    @Environment(\.modelContext) var context
+    @Query(sort: \Message.timestamp, order: .reverse) var messages: [Message]
     
-    // location
-    @StateObject var locationManager = LocationManager()
+    @StateObject private var networkMonitor = NetworkMonitor()
+    @ObservedObject var bluetoothManager: BluetoothManager
+    @ObservedObject var locationManager: LocationManager
+    
     @State private var region: MKCoordinateRegion = .init(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Default to San Francisco
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     )
 
-    // local storage
-    @Environment(\.modelContext) var context
-    @Query(sort: \Message.timestamp, order: .reverse) var messages: [Message]
-    
-    // view specific
     @State private var createMessage = false
     @State private var sendSOSAlert = false
     @State private var receiveSOSAlert = false
+    @State private var SOSAlertMessage = ""
 
     var body: some View {
         NavigationStack {
@@ -36,6 +33,7 @@ struct MapView: View {
                 annotationContent: { message in
                     MapMarker(coordinate: CLLocationCoordinate2D(latitude: message.latitude, longitude: message.longitude))
                 })
+            .ignoresSafeArea()
             
             toolbarView(createMessage: $createMessage, sendSOSAlert: $sendSOSAlert, networkMonitor: networkMonitor, bluetoothManager: bluetoothManager, locationManager: locationManager)
 
@@ -58,6 +56,7 @@ struct MapView: View {
         .onChange(of: messages) { _ in
             if let firstMessage = messages.first, firstMessage.category == .sos {
                 receiveSOSAlert = true
+                SOSAlertMessage = "Someone needs help at \(firstMessage.latitude), \(firstMessage.longitude)"
             }
         }
         .sheet(isPresented: $createMessage) {
@@ -68,7 +67,7 @@ struct MapView: View {
             Alert(title: Text("SOS Sent"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
         }
         .alert(isPresented: $receiveSOSAlert) {
-            Alert(title: Text("SOS Received"), message: Text("Your SOS alert has been sent to nearby devices."), dismissButton: .default(Text("OK")))
+            Alert(title: Text("SOS Received"), message: Text(SOSAlertMessage), dismissButton: .default(Text("OK")))
         }
     }
 }
@@ -133,5 +132,5 @@ struct toolbarView: View {
 }
 
 #Preview {
-    MapView()
+    MapView(bluetoothManager: BluetoothManager(), locationManager: LocationManager())
 }

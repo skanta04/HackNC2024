@@ -32,14 +32,6 @@ struct HistoryView: View {
             }
             .padding()
             .navigationTitle("History")
-            .toolbar {
-                Button {
-                    createNewBook = true
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .imageScale(.large)
-                }
-            }
             .sheet(isPresented: $createNewBook) {
                 NewMessageView(bluetoothManager: bluetoothManager, locationManager: locationManager) // Pass BluetoothManager to NewMessageView
                     .presentationDetents([.medium])
